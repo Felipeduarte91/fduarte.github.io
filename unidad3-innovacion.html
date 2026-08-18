@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Unidad 3 · Innovación y Mejora Continua — Recurso interactivo | IPSS</title>
+<style>
+  :root{
+    --navy:#1B2A4A; --deep:#101B31; --gold:#C4A46A; --gold-d:#8A6E36;
+    --ice:#EDF1F7; --sand:#F5EDDF; --body:#3A4355; --slate:#66708A;
+    --ok:#2E6B4F; --ok-bg:#E4F1EA; --bad:#8C3A3A; --bad-bg:#F7E7E7;
+    --line:#D9E0EB;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:#F7F9FC;color:var(--body);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Calibri,Helvetica,Arial,sans-serif;
+    line-height:1.6;-webkit-font-smoothing:antialiased}
+  h1,h2,h3,h4{font-family:Cambria,Georgia,"Times New Roman",serif;color:var(--navy);margin:0 0 .5rem}
+  a{color:var(--navy)}
+  .wrap{max-width:1060px;margin:0 auto;padding:0 1.25rem}
+
+  header{background:var(--navy);color:#fff;padding:2.4rem 0 2rem;position:relative;overflow:hidden}
+  header:after{content:"";position:absolute;right:-90px;top:-110px;width:320px;height:320px;
+    border-radius:50%;background:#24365C}
+  header .wrap{position:relative;z-index:1}
+  .kicker{font-size:.72rem;letter-spacing:.16em;font-weight:700;color:var(--gold);text-transform:uppercase}
+  header h1{color:#fff;font-size:2.1rem;margin:.5rem 0 .35rem;line-height:1.2}
+  header p{margin:0;color:#C6D0E2;max-width:56ch}
+
+  nav{background:#fff;border-bottom:1px solid var(--line);position:sticky;top:0;z-index:20;
+    box-shadow:0 1px 6px rgba(27,42,74,.06)}
+  nav .wrap{display:flex;gap:.25rem;overflow-x:auto}
+  nav button{appearance:none;background:none;border:0;padding:.95rem .9rem;font-size:.9rem;
+    font-weight:600;color:var(--slate);cursor:pointer;white-space:nowrap;border-bottom:3px solid transparent;
+    font-family:inherit}
+  nav button:hover{color:var(--navy)}
+  nav button[aria-selected="true"]{color:var(--navy);border-bottom-color:var(--gold)}
+
+  main{padding:2.2rem 0 4rem}
+  section[role="tabpanel"]{display:none;animation:fade .25s ease}
+  section[role="tabpanel"].on{display:block}
+  @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+  .lead{font-size:1.02rem;max-width:74ch}
+  .card{background:#fff;border:1px solid var(--line);border-radius:12px;padding:1.25rem 1.35rem;margin:1rem 0}
+  .grid{display:grid;gap:1rem}
+  @media(min-width:720px){.g2{grid-template-columns:1fr 1fr}.g3{grid-template-columns:repeat(3,1fr)}}
+  .tint{background:var(--ice);border-color:transparent}
+  .tint-s{background:var(--sand);border-color:transparent}
+  .num{display:inline-flex;align-items:center;justify-content:center;width:32px;height:32px;
+    border-radius:50%;background:var(--gold);color:var(--navy);font-weight:700;font-size:.9rem;margin-bottom:.6rem}
+  .muted{color:var(--slate);font-size:.88rem}
+  .quote{font-family:Cambria,Georgia,serif;font-style:italic;color:var(--navy);font-size:1.02rem}
+  ul{padding-left:1.15rem} li{margin:.3rem 0}
+  h3.sub{color:var(--gold-d);font-family:inherit;font-size:.95rem;letter-spacing:.04em;text-transform:uppercase;
+    font-weight:700;margin-top:1.6rem}
+
+  /* botones */
+  .btn{appearance:none;font-family:inherit;font-size:.9rem;font-weight:600;border-radius:8px;
+    padding:.6rem 1.05rem;cursor:pointer;border:1px solid var(--navy);background:var(--navy);color:#fff}
+  .btn:hover{background:#24365C}
+  .btn.ghost{background:#fff;color:var(--navy)}
+  .btn.ghost:hover{background:var(--ice)}
+  .btn:disabled{opacity:.45;cursor:not-allowed}
+
+  /* clasificador */
+  .caso{border:1px solid var(--line);border-radius:12px;background:#fff;padding:1.1rem 1.2rem;margin:.9rem 0}
+  .caso p.txt{margin:.2rem 0 .9rem}
+  .opts{display:flex;flex-wrap:wrap;gap:.5rem}
+  .opt{appearance:none;font-family:inherit;font-size:.86rem;font-weight:600;border:1px solid var(--line);
+    background:#fff;color:var(--navy);border-radius:999px;padding:.45rem .95rem;cursor:pointer}
+  .opt:hover:not(:disabled){border-color:var(--gold);background:#FDFAF4}
+  .opt:disabled{cursor:default;opacity:1;color:var(--navy)}
+  .opt.right{background:var(--ok-bg);border-color:var(--ok);color:var(--ok)}
+  .opt.wrong{background:var(--bad-bg);border-color:var(--bad);color:var(--bad)}
+  .fb{margin-top:.85rem;padding:.75rem .9rem;border-radius:8px;font-size:.9rem;display:none}
+  .fb.show{display:block}
+  .fb.good{background:var(--ok-bg);color:var(--ok)}
+  .fb.bad{background:var(--bad-bg);color:var(--bad)}
+
+  /* PHVA */
+  .steps{display:flex;flex-wrap:wrap;gap:.5rem;margin:1.1rem 0}
+  .step{flex:1 1 150px;border:1px solid var(--line);background:#fff;border-radius:10px;padding:.75rem .9rem;
+    cursor:pointer;text-align:left;font-family:inherit}
+  .step b{display:block;color:var(--navy);font-size:1rem}
+  .step span{font-size:.78rem;color:var(--slate)}
+  .step.done{border-color:var(--gold);background:#FDFAF4}
+  .step[aria-current="true"],.step.done[aria-current="true"]{background:var(--navy);border-color:var(--navy)}
+  .step[aria-current="true"] b{color:#fff}
+  .step[aria-current="true"] span{color:#C6D0E2}
+  .phva-body{border:1px solid var(--line);border-radius:12px;background:#fff;padding:1.25rem 1.35rem}
+  .choice{display:block;width:100%;text-align:left;font-family:inherit;font-size:.92rem;
+    border:1px solid var(--line);background:#fff;border-radius:9px;padding:.75rem .9rem;margin:.5rem 0;cursor:pointer}
+  .choice:hover:not(:disabled){border-color:var(--gold);background:#FDFAF4}
+  .choice:disabled{cursor:default;opacity:1;color:var(--body)}
+  .choice.right,.choice.right:disabled{background:var(--ok-bg);border-color:var(--ok);color:var(--ok)}
+  .choice.wrong,.choice.wrong:disabled{background:var(--bad-bg);border-color:var(--bad);color:var(--bad)}
+
+  /* quiz */
+  .bar{height:7px;background:var(--ice);border-radius:99px;overflow:hidden;margin:.8rem 0 1.2rem}
+  .bar i{display:block;height:100%;background:var(--gold);width:0;transition:width .3s}
+  .score{font-family:Cambria,Georgia,serif;font-size:3rem;color:var(--navy);font-weight:700;line-height:1}
+
+  /* glosario */
+  details{border:1px solid var(--line);border-radius:10px;background:#fff;padding:.85rem 1.05rem;margin:.6rem 0}
+  details[open]{background:#FDFDFE}
+  summary{cursor:pointer;font-weight:700;color:var(--navy);font-family:Cambria,Georgia,serif;font-size:1.02rem}
+  summary::marker{color:var(--gold)}
+  details p{margin:.6rem 0 0;font-size:.93rem}
+
+  footer{border-top:1px solid var(--line);padding:1.6rem 0;color:var(--slate);font-size:.82rem;background:#fff}
+  .pill{display:inline-block;background:var(--ice);color:var(--navy);border-radius:999px;
+    padding:.2rem .7rem;font-size:.74rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <div class="kicker">Instituto Profesional San Sebastián · AP101ADMP</div>
+    <h1>Unidad 3 · Innovación y Mejora Continua</h1>
+    <p>Recurso interactivo de estudio y autoevaluación. Todos los contenidos provienen del Apunte N° 3 de la asignatura Rol del Funcionario Público.</p>
+  </div>
+</header>
+
+<nav>
+  <div class="wrap" role="tablist">
+    <button role="tab" data-p="mapa" aria-selected="true">Mapa de la unidad</button>
+    <button role="tab" data-p="clasif" aria-selected="false">Clasificador de innovación</button>
+    <button role="tab" data-p="phva" aria-selected="false">Simulador ciclo PHVA</button>
+    <button role="tab" data-p="quiz" aria-selected="false">Autoevaluación</button>
+    <button role="tab" data-p="glosario" aria-selected="false">Glosario</button>
+  </div>
+</nav>
+
+<main class="wrap">
+
+<!-- ===================== MAPA ===================== -->
+<section role="tabpanel" id="mapa" class="on">
+  <h2>Mapa de la unidad</h2>
+  <p class="lead">La unidad se organiza en cuatro bloques. Recorra cada uno antes de pasar a las actividades interactivas.</p>
+
+  <div class="grid g2">
+    <div class="card tint">
+      <span class="num">1</span>
+      <h3>Conceptos fundamentales</h3>
+      <p><b>Manual de Oslo (OCDE y Eurostat).</b> Un nuevo o mejorado producto o proceso que difiere significativamente de los previos y que ha sido puesto a disposición de las personas usuarias o implementado en la unidad institucional. Elimina la distinción entre innovación tecnológica y no tecnológica: lo decisivo es el grado de novedad y su implementación efectiva.</p>
+      <p><b>CEPAL.</b> Creación e implementación de nuevos procesos, servicios y métodos de provisión que producen mejoras significativas en eficiencia, efectividad o calidad. El foco está en las personas que entregan y reciben el servicio, en la colaboración multidisciplinaria y en la evidencia.</p>
+      <p><b>ONU y Agenda 2030.</b> La innovación es herramienta esencial para transformar la gobernanza. Las tareas del servicio público no conducen a una transformación si se llevan a cabo “como siempre”.</p>
+    </div>
+
+    <div class="card tint-s">
+      <span class="num">2</span>
+      <h3>Innovación inversa</h3>
+      <p>Concepto creado por Govindarajan y Trimble (2012): innovación adoptada primero por una región en vías de desarrollo y luego trasladada a mercados desarrollados.</p>
+      <p class="quote">“La innovación inversa es la estrategia de innovar en mercados emergentes o en vías de desarrollo con el fin de trasladar estas innovaciones en los mercados desarrollados.”</p>
+      <p><b>Principios:</b> no seguir el flujo norte-sur; pensar desde cero; proximidad al usuario final; descentralización de la innovación; relevancia global de las soluciones locales.</p>
+      <p><b>Componentes:</b> necesidad local significativa · solución de bajo costo · escalabilidad global · proceso autónomo de desarrollo · difusión inversa.</p>
+    </div>
+
+    <div class="card tint">
+      <span class="num">3</span>
+      <h3>Incremental y disruptiva</h3>
+      <p><b>Incremental.</b> Mejoras graduales y continuas en lo existente. Optimiza lo que ya funciona; menor riesgo y menor inversión.</p>
+      <p><b>Disruptiva.</b> Productos o servicios completamente nuevos que alteran la forma de hacer algo. Mayor riesgo e inversión, pero gran impacto potencial.</p>
+      <p class="quote">“La innovación incremental se enfoca en perfeccionar lo que ya existe, mientras que la innovación disruptiva busca romper con el statu quo.”</p>
+    </div>
+
+    <div class="card tint-s">
+      <span class="num">4</span>
+      <h3>Mejora continua</h3>
+      <p>Esfuerzo constante por incrementar la calidad, eficiencia y efectividad mediante pequeñas y sostenidas mejoras, involucrando a todos los miembros de la organización (Deming, 1986). La norma ISO 9000:2015 la define como “una actividad recurrente para aumentar la capacidad de cumplir los requisitos”.</p>
+      <p><b>Metodologías:</b> ciclo PHVA · metodologías ágiles (Scrum, Kanban) · técnicas de análisis en entornos complejos (causa-raíz, mapeo de procesos, pensamiento de diseño, marco Cynefin).</p>
+    </div>
+  </div>
+
+  <h3 class="sub">Factores promotores</h3>
+  <div class="grid g3">
+    <div class="card"><h4>Cultura organizacional</h4><p class="muted">Apertura al cambio, tolerancia al error como parte del aprendizaje y reconocimiento de ideas nuevas.</p></div>
+    <div class="card"><h4>Gestión del talento humano</h4><p class="muted">Capacitación constante, liderazgo, reconocimiento a la creatividad y trabajo colaborativo.</p></div>
+    <div class="card"><h4>Adaptabilidad</h4><p class="muted">Flexibilidad en los procedimientos y disposición para rediseñar políticas con pertinencia local.</p></div>
+    <div class="card"><h4>Proactividad</h4><p class="muted">Anticipar necesidades observando el entorno y escuchando a la comunidad.</p></div>
+    <div class="card"><h4>Innovación colaborativa</h4><p class="muted">Sumar ideas desde distintos sectores, niveles y disciplinas.</p></div>
+    <div class="card"><h4>Alianzas para la innovación</h4><p class="muted">Redes con universidades, organizaciones sociales, centros de investigación y ciudadanía organizada.</p></div>
+  </div>
+
+  <h3 class="sub">Tendencias emergentes</h3>
+  <div class="grid g3">
+    <div class="card tint"><h4>Digitalización y gobierno electrónico</h4><p class="muted">Automatización, transparencia y acceso ciudadano. Su implementación debe ser inclusiva y con enfoque en equidad.</p></div>
+    <div class="card tint"><h4>Experiencia del usuario</h4><p class="muted">Entender las trayectorias ciudadanas, mapear puntos de dolor y rediseñar servicios desde esa experiencia.</p></div>
+    <div class="card tint"><h4>Sustentabilidad e innovación verde</h4><p class="muted">Desde compras públicas verdes hasta políticas energéticas locales.</p></div>
+  </div>
+</section>
+
+<!-- ===================== CLASIFICADOR ===================== -->
+<section role="tabpanel" id="clasif">
+  <h2>Clasificador de innovación</h2>
+  <p class="lead">Lea cada situación y determine qué tipo de innovación describe. Recibirá retroalimentación inmediata con el criterio del apunte.</p>
+  <p><span class="pill">Aciertos: <span id="clasifScore">0</span> de 8</span></p>
+  <div id="casos"></div>
+  <p><button class="btn ghost" id="clasifReset">Reiniciar actividad</button></p>
+</section>
+
+<!-- ===================== PHVA ===================== -->
+<section role="tabpanel" id="phva">
+  <h2>Simulador del ciclo PHVA</h2>
+  <p class="lead">Caso: una oficina de atención ciudadana municipal recibe quejas frecuentes por tiempos de espera prolongados. Avance por las cuatro etapas del ciclo y elija, en cada una, la decisión que corresponde a una gestión de mejora continua rigurosa.</p>
+
+  <div class="steps" id="steps"></div>
+  <div class="phva-body" id="phvaBody"></div>
+</section>
+
+<!-- ===================== QUIZ ===================== -->
+<section role="tabpanel" id="quiz">
+  <h2>Autoevaluación</h2>
+  <p class="lead">Diez preguntas de comprensión sobre los contenidos de la unidad. Cada respuesta incluye retroalimentación con el fundamento del apunte.</p>
+  <div class="bar"><i id="qbar"></i></div>
+  <div id="quizBody"></div>
+  <div id="quizEnd" style="display:none" class="card tint">
+    <div class="score"><span id="qfinal">0</span> / 10</div>
+    <p id="qmsg" style="margin-top:.6rem"></p>
+    <button class="btn" id="quizReset">Volver a intentarlo</button>
+  </div>
+</section>
+
+<!-- ===================== GLOSARIO ===================== -->
+<section role="tabpanel" id="glosario">
+  <h2>Glosario de la unidad</h2>
+  <p class="lead">Definiciones tomadas del Apunte N° 3. Despliegue cada término para revisarlo.</p>
+  <div id="glos"></div>
+
+  <h3 class="sub">Referencias</h3>
+  <div class="card">
+    <ul class="muted" style="margin:0">
+      <li>Mulgan, G. y Albury, D. (2003). <i>Innovation in the Public Sector</i>. Strategy Unit, Cabinet Office, London.</li>
+      <li>CEPAL-ILPES (2025). <i>Resiliencia Territorial e Innovación Pública</i>. Apuntes N° 4.</li>
+      <li>ONU (2025). <i>Innovación en el sector público</i>. Departamento de Asuntos Económicos y Sociales.</li>
+      <li>Govindarajan, V. y Trimble, C. (2012). <i>Innovación inversa</i>. Empresa Activa.</li>
+      <li>OCDE y Eurostat (2018). <i>Manual de Oslo</i>, cuarta edición.</li>
+      <li>Instituto San Sebastián, Departamento Online (2025). <i>Apunte 3: Innovación y Mejora Continua</i>.</li>
+    </ul>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    Recurso interactivo de apoyo · Unidad 3, Rol del Funcionario Público (AP101ADMP) · Instituto Profesional San Sebastián.
+    Elaborado exclusivamente a partir del Apunte N° 3 de la asignatura.
+  </div>
+</footer>
+
+<script>
+/* ---------- navegación ---------- */
+const tabs = document.querySelectorAll('nav button');
+tabs.forEach(t => t.addEventListener('click', () => {
+  tabs.forEach(x => x.setAttribute('aria-selected', x === t));
+  document.querySelectorAll('section[role="tabpanel"]').forEach(s =>
+    s.classList.toggle('on', s.id === t.dataset.p));
+  window.scrollTo({top: 0, behavior: 'smooth'});
+}));
+
+/* ---------- clasificador ---------- */
+const TIPOS = ["Incremental", "Disruptiva", "Inversa"];
+const CASOS = [
+  { t: "Una unidad municipal agrega dos nuevos campos al formulario en línea de solicitudes y reordena las preguntas para reducir los rechazos por datos incompletos.",
+    r: "Incremental",
+    e: "Es una mejora gradual sobre un servicio ya existente: optimiza lo que funciona, con bajo costo y bajo riesgo." },
+  { t: "El iPhone cambió la forma en que se navega por internet, del ordenador al móvil, creando un nuevo mercado para dispositivos móviles.",
+    r: "Disruptiva",
+    e: "Es el ejemplo que el apunte usa para ilustrar la disrupción: altera la forma en que se hace algo y abre un mercado nuevo." },
+  { t: "Un servicio con presupuesto muy acotado diseña desde cero un modelo de atención simple y de bajo costo; su éxito lleva a que instituciones con más recursos lo adopten después.",
+    r: "Inversa",
+    e: "Reúne los componentes del modelo: necesidad local significativa, solución de bajo costo, escalabilidad y difusión inversa hacia contextos más sofisticados." },
+  { t: "Una oficina reduce en dos pasos el trámite de renovación de un permiso, manteniendo el mismo procedimiento general.",
+    r: "Incremental",
+    e: "Optimización de un proceso existente: mejora la eficiencia sin cambiar la naturaleza del servicio." },
+  { t: "La incorporación de inteligencia artificial permite automatizar tareas, tomar decisiones más rápidas y crear servicios personalizados que antes no existían.",
+    r: "Disruptiva",
+    e: "El apunte la enumera entre los ejemplos de innovación disruptiva: satisface necesidades no satisfechas y transforma la forma de operar." },
+  { t: "Un equipo local de una zona rural desarrolla, con materiales y capacidades propias, una solución radicalmente más accesible que la convencional, sin sacrificar funcionalidad.",
+    r: "Inversa",
+    e: "Solución innovadora de bajo costo nacida de una restricción real, característica central del modelo de innovación inversa." },
+  { t: "Se publica una nueva versión del sistema interno de gestión documental, con funciones agregadas y correcciones sobre la versión anterior.",
+    r: "Incremental",
+    e: "Nueva versión de software con mejoras: ejemplo explícito de innovación incremental en el apunte." },
+  { t: "El blockchain transforma la manera en que se manejan los datos y las transacciones, con aplicaciones en diversos sectores.",
+    r: "Disruptiva",
+    e: "Cambio radical que desafía el statu quo y aplica una tecnología disruptiva a múltiples sectores." },
+];
+
+let clasifOk = 0;
+function pintaCasos() {
+  clasifOk = 0;
+  document.getElementById('clasifScore').textContent = '0';
+  const cont = document.getElementById('casos');
+  cont.innerHTML = '';
+  CASOS.forEach((c, i) => {
+    const d = document.createElement('div');
+    d.className = 'caso';
+    d.innerHTML = '<p class="muted" style="margin:0;font-weight:700">Situación ' + (i + 1) + '</p>' +
+      '<p class="txt">' + c.t + '</p><div class="opts"></div><div class="fb"></div>';
+    const opts = d.querySelector('.opts');
+    const fb = d.querySelector('.fb');
+    TIPOS.forEach(tp => {
+      const b = document.createElement('button');
+      b.className = 'opt'; b.textContent = tp;
+      b.onclick = () => {
+        opts.querySelectorAll('button').forEach(x => x.disabled = true);
+        const bien = tp === c.r;
+        b.classList.add(bien ? 'right' : 'wrong');
+        if (!bien) opts.querySelectorAll('button').forEach(x => { if (x.textContent === c.r) x.classList.add('right'); });
+        fb.className = 'fb show ' + (bien ? 'good' : 'bad');
+        fb.textContent = (bien ? '✓ Correcto. ' : '✗ La respuesta correcta es «' + c.r + '». ') + c.e;
+        if (bien) { clasifOk++; document.getElementById('clasifScore').textContent = clasifOk; }
+      };
+      opts.appendChild(b);
+    });
+    cont.appendChild(d);
+  });
+}
+document.getElementById('clasifReset').onclick = pintaCasos;
+pintaCasos();
+
+/* ---------- simulador PHVA ---------- */
+const ETAPAS = [
+  { k: 'P', n: 'Planificar', sub: 'Identificar y fijar objetivos',
+    intro: 'El equipo ha confirmado que las quejas por tiempos de espera son frecuentes. ¿Cuál es la decisión correcta en esta etapa?',
+    ops: [
+      { t: 'Analizar las causas del problema y fijar el objetivo de reducir el tiempo de espera en un 30%, con un plan de acción y responsables.', ok: true,
+        e: 'Correcto. Planificar significa identificar el problema o área de mejora, establecer objetivos medibles y un plan de acción.' },
+      { t: 'Contratar de inmediato personal adicional permanente para toda la municipalidad.', ok: false,
+        e: 'Incorrecto. Comprometer recursos permanentes antes de analizar causas y sin objetivo medible impide evaluar después si la medida funcionó.' },
+      { t: 'Esperar a que las quejas disminuyan por sí solas antes de intervenir.', ok: false,
+        e: 'Incorrecto. La mejora continua supone una actitud proactiva: anticipar y actuar antes de que los problemas escalen.' },
+    ],
+    cierre: 'Etapa cerrada: problema identificado, objetivo medible (reducir la espera en 30%) y plan de acción definido.' },
+
+  { k: 'H', n: 'Hacer', sub: 'Implementar a pequeña escala',
+    intro: 'El plan contempla reforzar el personal en horario punta y digitalizar algunos trámites. ¿Cómo se implementa?',
+    ops: [
+      { t: 'Implementar el plan como piloto durante dos semanas en una oficina.', ok: true,
+        e: 'Correcto. La etapa Hacer consiste en implementar el plan a pequeña escala o como piloto, lo que permite aprender con bajo riesgo.' },
+      { t: 'Aplicar el cambio simultáneamente en todas las oficinas municipales.', ok: false,
+        e: 'Incorrecto. Sin piloto previo se asume un riesgo innecesario y se pierde la posibilidad de ajustar antes de escalar.' },
+      { t: 'Redactar un instructivo y distribuirlo, sin ejecutar el cambio.', ok: false,
+        e: 'Incorrecto. Según el Manual de Oslo, una medida que no se implementa efectivamente no constituye innovación.' },
+    ],
+    cierre: 'Etapa cerrada: piloto implementado durante dos semanas, con alcance acotado y controlado.' },
+
+  { k: 'V', n: 'Verificar', sub: 'Evaluar contra los objetivos',
+    intro: 'Concluye el piloto. ¿Qué corresponde hacer?',
+    ops: [
+      { t: 'Comparar los tiempos de atención medidos antes y después de la intervención, contrastándolos con el objetivo del 30%.', ok: true,
+        e: 'Correcto. Verificar es evaluar los resultados comparándolos con los objetivos iniciales; sin esa comparación no hay aprendizaje.' },
+      { t: 'Consultar informalmente al equipo si percibe que la atención mejoró.', ok: false,
+        e: 'Incorrecto. La percepción es un insumo válido, pero no reemplaza la medición del indicador definido en la planificación.' },
+      { t: 'Dar por exitoso el piloto porque disminuyeron las quejas escritas.', ok: false,
+        e: 'Incorrecto. Se estaría midiendo un efecto distinto al objetivo comprometido; la verificación debe usar el indicador planificado.' },
+    ],
+    cierre: 'Etapa cerrada: los resultados se compararon con el objetivo inicial y fueron positivos.' },
+
+  { k: 'A', n: 'Actuar', sub: 'Estandarizar o ajustar',
+    intro: 'Los resultados fueron positivos. ¿Cuál es la decisión que cierra correctamente el ciclo?',
+    ops: [
+      { t: 'Formalizar el nuevo modelo de atención y extenderlo a otras oficinas municipales.', ok: true,
+        e: 'Correcto. Si los resultados son positivos se estandariza la mejora; si no lo fueran, se ajusta y se vuelve a planificar.' },
+      { t: 'Mantener el piloto indefinidamente sin formalizarlo.', ok: false,
+        e: 'Incorrecto. Sin estandarización la mejora depende de la voluntad de quienes participaron y no se sostiene en el tiempo.' },
+      { t: 'Cerrar el proyecto y archivar los resultados.', ok: false,
+        e: 'Incorrecto. El ciclo es recurrente: cerrar sin estandarizar ni volver a planificar interrumpe la mejora continua.' },
+    ],
+    cierre: 'Ciclo completo. La mejora se estandarizó y se extendió, permitiendo mejorar la eficiencia sin grandes recursos y en base a evidencia concreta.' },
+];
+
+let pasoActual = 0;
+const hechos = new Array(ETAPAS.length).fill(false);
+
+function pintaSteps() {
+  const c = document.getElementById('steps');
+  c.innerHTML = '';
+  ETAPAS.forEach((e, i) => {
+    const b = document.createElement('button');
+    b.className = 'step' + (hechos[i] ? ' done' : '');
+    b.setAttribute('aria-current', i === pasoActual);
+    b.innerHTML = '<b>' + e.k + ' · ' + e.n + '</b><span>' + e.sub + '</span>';
+    b.onclick = () => { pasoActual = i; render(); };
+    c.appendChild(b);
+  });
+}
+
+function render() {
+  pintaSteps();
+  const e = ETAPAS[pasoActual];
+  const body = document.getElementById('phvaBody');
+  body.innerHTML = '<h3>' + e.n + '</h3><p>' + e.intro + '</p><div id="ops"></div><div class="fb" id="pfb"></div><div id="nav" style="margin-top:1rem"></div>';
+  const ops = document.getElementById('ops');
+  const fb = document.getElementById('pfb');
+  e.ops.forEach(o => {
+    const b = document.createElement('button');
+    b.className = 'choice'; b.textContent = o.t;
+    b.onclick = () => {
+      ops.querySelectorAll('button').forEach(x => x.disabled = true);
+      b.classList.add(o.ok ? 'right' : 'wrong');
+      if (!o.ok) ops.querySelectorAll('button').forEach((x, idx) => { if (e.ops[idx].ok) x.classList.add('right'); });
+      fb.className = 'fb show ' + (o.ok ? 'good' : 'bad');
+      fb.textContent = o.e + (o.ok ? ' — ' + e.cierre : '');
+      hechos[pasoActual] = true;
+      pintaSteps();
+      const nav = document.getElementById('nav');
+      nav.innerHTML = '';
+      if (pasoActual < ETAPAS.length - 1) {
+        const nb = document.createElement('button');
+        nb.className = 'btn'; nb.textContent = 'Continuar a ' + ETAPAS[pasoActual + 1].n + ' →';
+        nb.onclick = () => { pasoActual++; render(); };
+        nav.appendChild(nb);
+      } else {
+        const rb = document.createElement('button');
+        rb.className = 'btn ghost'; rb.textContent = 'Reiniciar el ciclo';
+        rb.onclick = () => { pasoActual = 0; hechos.fill(false); render(); };
+        nav.appendChild(rb);
+      }
+    };
+    ops.appendChild(b);
+  });
+}
+render();
+
+/* ---------- autoevaluación ---------- */
+const PREGUNTAS = [
+  { q: "Según el Manual de Oslo (2018), ¿qué elemento resulta indispensable para que un cambio sea considerado innovación?",
+    o: ["Que incorpore alguna tecnología digital",
+        "Que difiera significativamente de lo previo y haya sido implementado o puesto a disposición de las personas usuarias",
+        "Que haya sido aprobado por la autoridad superior del servicio",
+        "Que reduzca el gasto público de la institución"],
+    r: 1,
+    e: "La definición elimina la distinción entre innovación tecnológica y no tecnológica: lo decisivo es el grado de novedad y su implementación efectiva." },
+
+  { q: "De acuerdo con el enfoque de la CEPAL, ¿dónde se pone el foco de la innovación pública?",
+    o: ["En la adquisición de tecnología de punta",
+        "En la reducción de la dotación de personal",
+        "En las personas que entregan y reciben un servicio",
+        "En la competencia entre instituciones públicas"],
+    r: 2,
+    e: "La CEPAL sitúa el foco en las personas que entregan y reciben el servicio, en el desarrollo incremental, la colaboración multidisciplinaria y la evidencia." },
+
+  { q: "La Agenda 2030 exige una transformación del servicio público porque advierte que las tareas institucionales no producen cambio si:",
+    o: ["Se ejecutan con presupuesto insuficiente",
+        "Se llevan a cabo “como siempre”",
+        "Se delegan en organismos internacionales",
+        "Se someten a evaluación externa"],
+    r: 1,
+    e: "El apunte señala que estas tareas “no pueden conducir a una transformación si se llevan a cabo como siempre”, y por eso se exige mayor creatividad e innovación." },
+
+  { q: "¿Cuál es la definición más simple de innovación inversa entregada en el apunte?",
+    o: ["Adaptar productos de países desarrollados a mercados emergentes",
+        "Innovar en mercados emergentes o en vías de desarrollo para trasladar esas innovaciones a los mercados desarrollados",
+        "Copiar soluciones exitosas de otras instituciones públicas",
+        "Revertir una innovación que no dio resultados"],
+    r: 1,
+    e: "El apunte la define exactamente así, sobre la base del trabajo de Govindarajan y Trimble (2012)." },
+
+  { q: "El principio de “pensar desde cero” (zero-based innovation) implica:",
+    o: ["Comenzar el proyecto sin presupuesto asignado",
+        "Adaptar productos existentes reduciendo sus prestaciones",
+        "Repensar la solución partiendo de las condiciones reales del contexto: recursos limitados, infraestructura débil, necesidades urgentes",
+        "Innovar únicamente en tecnología de bajo costo"],
+    r: 2,
+    e: "No se trata de adaptar lo existente, sino de repensarlo desde las condiciones reales del entorno donde se aplicará." },
+
+  { q: "Una municipalidad reordena la señalética y los turnos de su oficina de partes para agilizar la atención. Esta acción corresponde a innovación:",
+    o: ["Disruptiva, porque cambia la experiencia del usuario",
+        "Incremental, porque mejora gradualmente un proceso existente",
+        "Inversa, porque es de bajo costo",
+        "No constituye innovación de ningún tipo"],
+    r: 1,
+    e: "La innovación incremental se enfoca en mejoras graduales y continuas sobre procesos existentes, con menor riesgo e inversión." },
+
+  { q: "¿Cuál de las siguientes afirmaciones sobre la innovación disruptiva es correcta según el apunte?",
+    o: ["Garantiza siempre resultados positivos",
+        "Requiere menor inversión que la incremental",
+        "Es más arriesgada y puede ser exitosa o no, pero su impacto potencial es mayor",
+        "Solo puede aplicarse en el sector privado"],
+    r: 2,
+    e: "El apunte indica expresamente que es más arriesgada, requiere mayor inversión y que “puede ser exitosa o no”." },
+
+  { q: "En el ciclo PHVA, la etapa Verificar consiste en:",
+    o: ["Revisar que el procedimiento cumpla la normativa vigente",
+        "Evaluar los resultados comparándolos con los objetivos iniciales",
+        "Solicitar la aprobación de la jefatura antes de continuar",
+        "Documentar el plan de acción y sus responsables"],
+    r: 1,
+    e: "Verificar es contrastar los resultados obtenidos con los objetivos que se fijaron al planificar; sin ese contraste no hay aprendizaje." },
+
+  { q: "Si los resultados de un piloto fueron negativos, la etapa Actuar indica que corresponde:",
+    o: ["Estandarizar igualmente la medida para no perder el trabajo realizado",
+        "Suspender definitivamente cualquier intento de mejora",
+        "Ajustar y volver a planificar",
+        "Trasladar la responsabilidad a otra unidad"],
+    r: 2,
+    e: "Si los resultados fueron positivos se estandariza la mejora; si no, se ajusta y se vuelve a planificar. El ciclo es recurrente." },
+
+  { q: "El marco Cynefin se utiliza para:",
+    o: ["Identificar el origen profundo de un problema mediante los cinco porqués",
+        "Clasificar un problema según su nivel de complejidad —claro, complicado, complejo o caótico— y decidir cómo abordarlo",
+        "Mapear la relación entre las distintas partes de una organización",
+        "Diseñar soluciones poniendo al usuario en el centro"],
+    r: 1,
+    e: "El marco Cynefin clasifica el problema por su complejidad; el causa-raíz, el mapeo de procesos y el pensamiento de diseño cumplen las otras funciones descritas." },
+];
+
+let qi = 0, qok = 0;
+function pintaQuiz() {
+  const body = document.getElementById('quizBody');
+  const fin = document.getElementById('quizEnd');
+  document.getElementById('qbar').style.width = (qi / PREGUNTAS.length * 100) + '%';
+  if (qi >= PREGUNTAS.length) {
+    body.innerHTML = '';
+    fin.style.display = 'block';
+    document.getElementById('qfinal').textContent = qok;
+    const m = qok >= 9 ? 'Dominio destacado de los contenidos de la unidad. Está en condiciones de aplicarlos en el taller práctico.'
+      : qok >= 7 ? 'Buen manejo general. Revise las preguntas que falló antes de avanzar al taller.'
+      : qok >= 5 ? 'Comprensión parcial. Se recomienda volver al Mapa de la unidad y al Simulador PHVA antes de reintentar.'
+      : 'Es necesario revisar nuevamente el Apunte N° 3 y el Mapa de la unidad antes de continuar.';
+    document.getElementById('qmsg').textContent = m;
+    return;
+  }
+  fin.style.display = 'none';
+  const p = PREGUNTAS[qi];
+  body.innerHTML = '<div class="card"><p class="muted" style="margin:0;font-weight:700">Pregunta ' + (qi + 1) +
+    ' de ' + PREGUNTAS.length + '</p><h3 style="margin:.4rem 0 1rem">' + p.q + '</h3><div id="qops"></div>' +
+    '<div class="fb" id="qfb"></div><div id="qnav" style="margin-top:1rem"></div></div>';
+  const ops = document.getElementById('qops');
+  const fb = document.getElementById('qfb');
+  p.o.forEach((txt, idx) => {
+    const b = document.createElement('button');
+    b.className = 'choice'; b.textContent = txt;
+    b.onclick = () => {
+      ops.querySelectorAll('button').forEach(x => x.disabled = true);
+      const bien = idx === p.r;
+      b.classList.add(bien ? 'right' : 'wrong');
+      if (!bien) ops.querySelectorAll('button')[p.r].classList.add('right');
+      if (bien) qok++;
+      fb.className = 'fb show ' + (bien ? 'good' : 'bad');
+      fb.textContent = (bien ? '✓ Correcto. ' : '✗ Incorrecto. ') + p.e;
+      const nav = document.getElementById('qnav');
+      const nb = document.createElement('button');
+      nb.className = 'btn';
+      nb.textContent = qi < PREGUNTAS.length - 1 ? 'Siguiente pregunta →' : 'Ver resultado';
+      nb.onclick = () => { qi++; pintaQuiz(); };
+      nav.appendChild(nb);
+    };
+    ops.appendChild(b);
+  });
+}
+document.getElementById('quizReset').onclick = () => { qi = 0; qok = 0; pintaQuiz(); };
+pintaQuiz();
+
+/* ---------- glosario ---------- */
+const GLOSARIO = [
+  ["Innovación (Manual de Oslo)", "Un nuevo o mejorado producto o proceso (o una combinación de ambos) que difiere significativamente de los productos o procesos previos de la unidad institucional y que ha sido puesto a disposición de potenciales personas usuarias (producto) o implementado en la unidad institucional (proceso)."],
+  ["Innovación pública (CEPAL)", "Creación e implementación de nuevos procesos, servicios y métodos de provisión que resultan en mejoras significativas en la eficiencia, efectividad o calidad de los resultados. Puede ser de productos, de procesos, organizacional o de comunicación."],
+  ["Innovación inversa", "Estrategia de innovar en mercados emergentes o en vías de desarrollo con el fin de trasladar estas innovaciones a los mercados desarrollados. Concepto creado por Govindarajan y Trimble (2012)."],
+  ["Difusión inversa", "Componente del modelo de innovación inversa: tras su éxito local, la innovación puede “subir” hacia mercados más sofisticados, siendo revalorizada o incluso transformada en tendencia."],
+  ["Innovación incremental", "Mejoras graduales y continuas en productos, procesos o servicios existentes. Optimiza lo que ya funciona; es menos arriesgada y requiere menos inversión que la disruptiva."],
+  ["Innovación disruptiva", "Creación de productos o servicios completamente nuevos que alteran la forma en que se hace algo. Busca satisfacer necesidades no satisfechas o crear nuevas; es más arriesgada y requiere mayor inversión."],
+  ["Mejora continua", "Esfuerzo constante por incrementar la calidad, la eficiencia y la efectividad de los procesos, productos o servicios, mediante pequeñas y sostenidas mejoras, involucrando a todos los miembros de una organización (basada en Deming, 1986). La norma ISO 9000:2015 la define como “una actividad recurrente para aumentar la capacidad de cumplir los requisitos”."],
+  ["Ciclo PHVA (PDCA)", "Herramienta fundamental para la gestión de calidad y mejora continua: Planificar (identificar el problema, fijar objetivos y plan de acción), Hacer (implementar a pequeña escala o como piloto), Verificar (evaluar los resultados frente a los objetivos iniciales) y Actuar (estandarizar la mejora o ajustar y volver a planificar). Desarrollado por Walter A. Shewhart y popularizado por W. Edwards Deming."],
+  ["Metodologías ágiles", "Enfoques originados en el desarrollo de software y adaptados al sector público. Se caracterizan por entregas rápidas y continuas de valor, equipos autogestionados y multidisciplinarios, alta adaptación al cambio y ciclos de trabajo cortos (sprints). Ejemplos: Scrum y Kanban."],
+  ["Análisis causa-raíz", "Técnica para identificar el origen profundo de un problema, mediante el método de los cinco porqués o el diagrama de Ishikawa."],
+  ["Marco Cynefin", "Herramienta que clasifica un problema según su nivel de complejidad —claro, complicado, complejo o caótico— para decidir cómo abordarlo. Un problema complejo requiere soluciones emergentes, no lineales."],
+  ["Pensamiento de diseño", "Design thinking: enfoque que pone en el centro las necesidades de los usuarios al idear soluciones."],
+  ["Cultura organizacional", "Conjunto de valores, creencias y prácticas compartidas por los integrantes de una organización. Una cultura orientada a la innovación fomenta la apertura al cambio, la tolerancia al error como parte del aprendizaje y el reconocimiento de ideas nuevas."],
+  ["Innovación colaborativa", "La innovación pública no ocurre en aislamiento: requiere sumar ideas desde distintos sectores, niveles y disciplinas, mediante el trabajo entre departamentos, comunas o actores públicos y privados."],
+];
+const g = document.getElementById('glos');
+GLOSARIO.forEach(([t, d]) => {
+  const el = document.createElement('details');
+  el.innerHTML = '<summary>' + t + '</summary><p>' + d + '</p>';
+  g.appendChild(el);
+});
+</script>
+</body>
+</html>
