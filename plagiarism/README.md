@@ -19,6 +19,60 @@ python3 ml_model.py --text "texto sospechoso" --source "texto fuente"
 El CSV de entrenamiento necesita las columnas `text`, `source_text` y `label`
 (1 = plagiado, 0 = original). `plagiarism_dataset.csv` es un ejemplo sintetico.
 
+## Ejecutar en VS Code
+
+1. Clona el repo y situate en la rama:
+
+   ```bash
+   git clone https://github.com/Felipeduarte91/fduarte.github.io.git
+   cd fduarte.github.io
+   git checkout claude/debug-plagiarism-detection-homk2g
+   code .
+   ```
+
+2. Instala la extension **Python** de Microsoft (`ms-python.python`), que trae
+   el depurador `debugpy` que usa `.vscode/launch.json`.
+
+3. Crea un entorno virtual e instala las dependencias. En VS Code:
+   `Ctrl+Shift+P` → **Python: Create Environment** → *Venv* → marca
+   `plagiarism/requirements.txt`. O a mano:
+
+   ```bash
+   python3 -m venv .venv
+   source .venv/bin/activate        # Windows: .venv\Scripts\activate
+   pip install -r plagiarism/requirements.txt
+   ```
+
+4. Selecciona el interprete: `Ctrl+Shift+P` → **Python: Select Interpreter** →
+   el que dice `.venv`.
+
+5. Abre el panel **Run and Debug** (`Ctrl+Shift+D`) y elige una configuracion:
+
+   | Configuracion | Que hace |
+   | --- | --- |
+   | 1. Similitud (ejemplo) | Ejecuta `similarity.py` con el ejemplo incluido |
+   | 2. Entrenar modelo | Entrena y guarda `plagiarism_model.pkl` |
+   | 3. Predecir (texto fijo) | Predice con un texto de ejemplo |
+   | 4. Predecir (preguntar...) | Pide texto y fuente por teclado |
+
+   Pulsa `F5` para ejecutar, o pon un breakpoint en el margen izquierdo para
+   depurar paso a paso.
+
+Ejecuta la configuracion **2** antes que la **3** o la **4**: la prediccion
+necesita el `.pkl` que genera el entrenamiento.
+
+### Sin depurador, desde la terminal integrada
+
+```bash
+cd plagiarism
+python3 similarity.py
+python3 ml_model.py --train plagiarism_dataset.csv
+python3 ml_model.py --text "texto sospechoso" --source "texto fuente"
+```
+
+Importa ejecutar desde dentro de `plagiarism/`: los scripts usan rutas
+relativas para el dataset y el modelo, y `ml_model.py` importa `similarity`.
+
 ## Errores corregidos
 
 ### `similarity.py`

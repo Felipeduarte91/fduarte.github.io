@@ -1,0 +1,10 @@
+# Dependencias para plagiarism/ml_model.py
+# similarity.py solo usa la biblioteca estandar y no necesita nada de esto.
+#
+#   pip install -r plagiarism/requirements.txt
+#
+# Requiere Python 3.9 o superior.
+numpy>=1.21
+pandas>=1.3
+scikit-learn>=1.0
+joblib>=1.0

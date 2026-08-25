@@ -205,18 +205,26 @@ def main(argv: list[str] | None = None) -> int:
 
     model_path = Path(args.model)
 
-    if args.train:
-        train_plagiarism_model(args.train, model_path=model_path)
-
-    if args.text:
-        if not args.source:
-            parser.error("--text requiere --source (el plagio es una relacion).")
-        label, proba = predict(args.text, args.source, model_path=model_path)
-        veredicto = "PLAGIADO" if label == 1 else "ORIGINAL"
-        print(f"\nPrediccion: {veredicto} (probabilidad de plagio: {proba:.2%})")
-
     if not args.train and not args.text:
         parser.print_help()
+        return 0
+
+    try:
+        if args.train:
+            train_plagiarism_model(args.train, model_path=model_path)
+
+        if args.text:
+            if not args.source:
+                parser.error("--text requiere --source (el plagio es una relacion).")
+            label, proba = predict(args.text, args.source, model_path=model_path)
+            veredicto = "PLAGIADO" if label == 1 else "ORIGINAL"
+            print(f"\nPrediccion: {veredicto} (probabilidad de plagio: {proba:.2%})")
+    except (FileNotFoundError, ValueError) as exc:
+        # Errores de uso esperados (falta el dataset o el modelo, columnas mal):
+        # un mensaje claro es mas util que un traceback.
+        print(f"Error: {exc}", file=sys.stderr)
+        return 1
+
     return 0
 
 
