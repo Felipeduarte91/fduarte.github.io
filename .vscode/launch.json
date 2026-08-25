@@ -1,0 +1,61 @@
+{
+  // Configuraciones de ejecucion para VS Code (F5 o el panel "Run and Debug").
+  // cwd apunta a plagiarism/ porque los scripts usan rutas relativas
+  // (plagiarism_dataset.csv y plagiarism_model.pkl).
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "1. Similitud (ejemplo)",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${workspaceFolder}/plagiarism/similarity.py",
+      "cwd": "${workspaceFolder}/plagiarism",
+      "console": "integratedTerminal"
+    },
+    {
+      "name": "2. Entrenar modelo",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${workspaceFolder}/plagiarism/ml_model.py",
+      "cwd": "${workspaceFolder}/plagiarism",
+      "console": "integratedTerminal",
+      "args": ["--train", "plagiarism_dataset.csv"]
+    },
+    {
+      "name": "3. Predecir (texto fijo)",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${workspaceFolder}/plagiarism/ml_model.py",
+      "cwd": "${workspaceFolder}/plagiarism",
+      "console": "integratedTerminal",
+      "args": [
+        "--text", "The quick brown fox jumps over the lazy dog near the river bank.",
+        "--source", "The quick brown fox jumps over the lazy dog near the river bank."
+      ]
+    },
+    {
+      "name": "4. Predecir (preguntar texto y fuente)",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${workspaceFolder}/plagiarism/ml_model.py",
+      "cwd": "${workspaceFolder}/plagiarism",
+      "console": "integratedTerminal",
+      "args": [
+        "--text", "${input:textoSospechoso}",
+        "--source", "${input:textoFuente}"
+      ]
+    }
+  ],
+  "inputs": [
+    {
+      "id": "textoSospechoso",
+      "type": "promptString",
+      "description": "Texto sospechoso de plagio"
+    },
+    {
+      "id": "textoFuente",
+      "type": "promptString",
+      "description": "Texto fuente contra el que comparar"
+    }
+  ]
+}
