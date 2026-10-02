@@ -50,7 +50,7 @@ Variables de entorno:
 **Frontend en GitHub Pages (modo estático).** Con Pages activado en la rama `main` del repositorio, la app queda en
 `https://felipeduarte91.github.io/fduarte.github.io/fondos-chile/public/`. Sin backend, los proyectos se guardan en cada navegador.
 
-**Backend en Render (Docker).** `render.yaml` es un Blueprint: en Render elija *New → Blueprint* y este repositorio. Crea el servicio con `rootDir: fondos-chile`, genera `ADMIN_TOKEN` (cópielo desde el panel de Render), permite CORS desde `https://felipeduarte91.github.io` y monta un disco en `/data` para los proyectos. El disco requiere plan pago; en el plan gratuito los proyectos se pierden en cada reinicio.
+**Backend en Render (Docker).** `render.yaml` (en la raíz del repo) es un Blueprint: en Render elija *New → Blueprint* y este repositorio. Crea el servicio con `rootDir: fondos-chile`, genera `ADMIN_TOKEN` (cópielo desde el panel de Render), permite CORS desde `https://felipeduarte91.github.io` y monta un disco en `/data` para los proyectos. El disco requiere plan pago; en el plan gratuito los proyectos se pierden en cada reinicio.
 
 Para conectar la versión de Pages a ese backend: `…/fondos-chile/public/?api=https://brujula-fondos-chile.onrender.com`.
 
