@@ -1,0 +1,24 @@
+# Blueprint de Render (debe estar en la raíz del repo). En Render: New > Blueprint, elija este repositorio.
+# El disco persistente requiere un plan pago; sin él, los proyectos se pierden al reiniciar.
+services:
+  - type: web
+    name: brujula-fondos-chile
+    runtime: docker
+    rootDir: fondos-chile
+    # Según la referencia de Blueprints, estas rutas son relativas a la raíz del repo.
+    dockerfilePath: ./fondos-chile/Dockerfile
+    dockerContext: ./fondos-chile
+    plan: starter
+    healthCheckPath: /api/health
+    autoDeploy: true
+    envVars:
+      - key: ADMIN_TOKEN
+        generateValue: true
+      - key: ALLOW_ORIGIN
+        value: https://felipeduarte91.github.io
+      - key: STORE_FILE
+        value: /data/proyectos.json
+    disk:
+      name: datos
+      mountPath: /data
+      sizeGB: 1
