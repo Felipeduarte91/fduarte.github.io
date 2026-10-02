@@ -102,7 +102,7 @@ export async function crearApp({ publicDir, storeFile = null, adminToken = "", a
     } catch (e) { next(e); }
   });
   app.delete("/api/proyectos/:id", limitar, soloAdmin, async (req, res, next) => {
-    try { (await store.eliminar(req.params.id)) ? res.sendStatus(204) : res.status(404).json({ error: "Proyecto no encontrado." }); }
+    try { (await store.eliminar(req.params.id)) ? res.json({ eliminado: true }) : res.status(404).json({ error: "Proyecto no encontrado." }); }
     catch (e) { next(e); }
   });
 

@@ -1,5 +1,6 @@
 {
   "fuente": "Población: Censo 2017 (INE). Coordenadas: capital regional, aproximadas.",
+  "poligonos": null,
   "regiones": [
     {"codigo": "15", "nombre": "Arica y Parinacota", "capital": "Arica", "lat": -18.4783, "lng": -70.3126, "poblacion": 226068},
     {"codigo": "01", "nombre": "Tarapacá", "capital": "Iquique", "lat": -20.2133, "lng": -70.1503, "poblacion": 330558},

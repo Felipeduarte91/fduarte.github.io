@@ -17,6 +17,7 @@ const el = (tag, attrs = {}, ...kids) => {
   for (const c of kids.flat()) if (c != null && c !== false) n.append(c.nodeType ? c : document.createTextNode(c));
   return n;
 };
+const put = (n, ...k) => n.append(...k.flat().filter(x => x != null && x !== false));
 const clp = n => n == null ? "Según bases" : "$" + Math.round(n).toLocaleString("es-CL");
 const num = n => n == null ? "–" : Number(n).toLocaleString("es-CL");
 const cssVar = v => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
@@ -145,11 +146,18 @@ function clases(valores) {
   if (!vs.length) return [];
   const min = Math.min(...vs), max = Math.max(...vs);
   if (min === max) return [{ desde: min, hasta: max, color: "--seq-3" }];
+  // Pocos enteros distintos: una clase por valor, repartidas en la rampa.
+  if (vs.every(Number.isInteger) && max - min < 5) {
+    const n = max - min + 1, pasos = [[3], [1, 5], [1, 3, 5], [1, 2, 4, 5], [1, 2, 3, 4, 5]][n - 1];
+    return pasos.map((s, i) => ({ desde: min + i, hasta: min + i, color: "--seq-" + s }));
+  }
   const paso = (max - min) / 5;
   return [1, 2, 3, 4, 5].map(i => ({ desde: min + paso * (i - 1), hasta: i === 5 ? max : min + paso * i, color: "--seq-" + i }));
 }
 const claseDe = (cs, v) => v == null ? null : cs.find((c, i) => v <= c.hasta || i === cs.length - 1);
 
+const escalaZoom = () => Math.min(1, Math.max(0.4, (map.getZoom() - 2.5) / 4));
+map.on("zoomend", () => { if (!api.poligonos) renderRegiones(); });
 function renderRegiones() {
   capaRegiones.clearLayers(); capaSedes.clearLayers();
   indic = indicadoresRegion(api.regiones, api.fondos, st.proyectos, st.filtros);
@@ -179,7 +187,7 @@ function renderRegiones() {
       // Sin polígonos: símbolos proporcionales en la capital (área ∝ valor).
       [...api.regiones].sort((a, b) => (porCod[b.codigo][st.indicador] || 0) - (porCod[a.codigo][st.indicador] || 0)).forEach(r => {
         const v = porCod[r.codigo][st.indicador];
-        const radio = v == null ? 6 : 6 + 22 * Math.sqrt(Math.max(0, v) / max);
+        const radio = (v == null ? 5 : 5 + 20 * Math.sqrt(Math.max(0, v) / max)) * escalaZoom();
         L.circleMarker([r.lat, r.lng], { pane: "regiones", radius: radio, ...estilo(r) })
           .bindTooltip(tip(r), { direction: "top", offset: [0, -radio] })
           .on("click", () => { if (!st.herramienta) seleccionar("region", r.codigo); }).addTo(capaRegiones);
@@ -233,7 +241,7 @@ function renderDetalle() {
     const fs = filtrarFondos(fondosDeRegion(api.fondos, id), st.filtros);
     const ps = st.proyectos.filter(p => p.region === id);
     $("#detail-titulo").textContent = "Región de " + r.nombre;
-    body.append(
+    put(body,
       kv([["Capital", r.capital], ["Población (2017)", num(r.poblacion)], ["Fondos (filtros)", num(fs.length)], ["Proyectos", num(ps.length)], ["Adjudicados", num(ind.adjudicados)], ["Monto adjudicado", "$" + num(ind.monto_adjudicado)]]),
       el("div", { class: "row", style: "margin-bottom:14px" },
         el("button", { type: "button", class: "btn small", text: "Acercar a la región", onclick: () => map.flyTo([r.lat, r.lng], 7, { duration: .6 }) }),
@@ -247,7 +255,7 @@ function renderDetalle() {
     const f = FON[id]; const e = estadoFondo(f);
     const ps = st.proyectos.filter(p => p.fondoId === id);
     $("#detail-titulo").textContent = f.nombre;
-    body.append(
+    put(body,
       el("p", { class: "muted", style: "margin-top:0", text: f.institucion }),
       el("div", { class: "row", style: "margin-bottom:10px" }, tagCob(f), tagEstado(f)),
       el("p", { text: f.resumen }),
@@ -262,7 +270,7 @@ function renderDetalle() {
     const p = st.proyectos.find(x => x.id === id);
     if (!p) { st.sel = null; box.hidden = true; return; }
     $("#detail-titulo").textContent = p.nombre;
-    body.append(
+    put(body,
       el("div", { class: "row", style: "margin-bottom:10px" }, el("span", { class: "sw dot", style: "background:var(--p-" + p.estado + ")" }), el("b", { text: ESTADOS_PROYECTO[p.estado] })),
       kv([["Organización", p.organizacion || "–"], ["Región", REG[p.region] ? REG[p.region].nombre : "–"], ["Fondo", p.fondoId && FON[p.fondoId] ? FON[p.fondoId].nombre : "Sin definir"], ["Monto", p.monto == null ? "–" : "$" + num(p.monto)], ["Coordenadas", p.lat.toFixed(4) + ", " + p.lng.toFixed(4)], ["Actualizado", p.actualizado ? new Date(p.actualizado).toLocaleDateString("es-CL") : "–"]]),
       p.descripcion ? el("p", { style: "white-space:pre-wrap", text: p.descripcion }) : null,
@@ -406,7 +414,7 @@ function capaItem(clave, titulo, extra) {
       c.opacidad != null ? el("label", {}, "Opacidad", el("input", { type: "range", min: .1, max: 1, step: .05, value: c.opacidad, oninput: e => { c.opacidad = Number(e.target.value); guardarPrefs(); refrescarMapa(); } })) : null));
 }
 function panelCapas(body) {
-  body.append(
+  put(body,
     capaItem("proyectos", "Proyectos registrados", el("span", { class: "note", text: api.modo === "api" ? "Compartidos en el servidor." : "Guardados en este navegador." })),
     capaItem("sedes", "Sedes de Gobiernos Regionales", null),
     capaItem("regiones", api.poligonos ? "Regiones · coropletas" : "Regiones · símbolos proporcionales",
@@ -419,7 +427,7 @@ function panelFiltros(body) {
   const f = st.filtros;
   const upd = k => e => { f[k] = e.target.value; guardarPrefs(); refrescar(); };
   const resumen = el("p", { class: "note", id: "filtro-resumen" });
-  body.append(
+  put(body,
     el("label", { class: "field" }, el("span", { text: "Palabra clave" }), el("input", { type: "search", value: f.q, placeholder: "p. ej., cuidadoras, agua, radio", oninput: upd("q") })),
     el("label", { class: "field" }, el("span", { text: "Tema" }), el("select", { onchange: upd("tema") }, opciones(TEMAS, "Todos los temas", f.tema))),
     el("label", { class: "field" }, el("span", { text: "Tipo de organización que postula" }), el("select", { onchange: upd("tipo") }, opciones(TIPOS_ORG, "Cualquiera", f.tipo))),
@@ -440,13 +448,13 @@ function actualizarResumenFiltros() {
 function panelLeyenda(body) {
   const cs = st.clases || [], ind = INDICADORES[st.indicador];
   if (st.capas.regiones.visible) body.append(el("div", { class: "block" },
-    el("p", { class: "legend-title", text: ind.nombre }),
+    el("p", { class: "legend-title", text: "Regiones · " + ind.nombre }),
     cs.length === 1 ? el("div", { class: "legend-item" }, el("span", { class: "sw", style: "background:var(" + cs[0].color + ")" }), ind.fmt(cs[0].desde) + " en todas las regiones")
-      : cs.map(c => el("div", { class: "legend-item" }, el("span", { class: "sw", style: "background:var(" + c.color + ")" }), ind.fmt(Math.round(c.desde)) + " – " + ind.fmt(Math.round(c.hasta)))),
+      : cs.map(c => el("div", { class: "legend-item" }, el("span", { class: "sw", style: "background:var(" + c.color + ")" }), c.desde === c.hasta ? ind.fmt(c.desde) : ind.fmt(Math.round(c.desde)) + " – " + ind.fmt(Math.round(c.hasta)))),
     indic.some(x => x[st.indicador] == null) ? el("div", { class: "legend-item" }, el("span", { class: "sw", style: "background:var(--line-strong)" }), "Sin datos") : null,
     api.poligonos ? null : el("p", { class: "note", text: "El tamaño del círculo también es proporcional al valor." })));
   if (st.capas.proyectos.visible) body.append(el("div", { class: "block" },
-    el("p", { class: "legend-title", text: "Proyectos registrados" }),
+    el("p", { class: "legend-title", text: "Proyectos por estado" }),
     Object.entries(ESTADOS_PROYECTO).map(([k, t]) => el("div", { class: "legend-item" }, el("span", { class: "sw dot", style: "background:var(--p-" + k + ")" }), t + " (" + st.proyectos.filter(p => p.estado === k).length + ")"))));
   if (st.capas.sedes.visible) body.append(el("div", { class: "block" }, el("div", { class: "legend-item" }, el("span", { class: "sw sq" }), "Sede del Gobierno Regional (capital)")));
   if (!body.childElementCount) body.append(el("p", { class: "muted", text: "No hay capas visibles." }));
@@ -460,7 +468,7 @@ function panelBasemap(body) {
 
 function panelProyecto(body) {
   if (!st.nuevo) {
-    body.append(
+    put(body,
       el("p", { text: "Registre la ubicación de un proyecto de su organización para verlo en el mapa junto a los fondos de su región." }),
       el("button", { type: "button", class: "btn", text: "Elegir ubicación en el mapa", onclick: () => activarHerramienta(true) }),
       el("p", { class: "note", style: "margin-top:12px", text: api.modo === "api" ? "Se guarda en el servidor y lo verán otros usuarios." : "Modo estático: se guarda solo en este navegador." }));
@@ -482,7 +490,7 @@ function panelProyecto(body) {
 }
 
 function panelAcerca(body) {
-  body.append(
+  put(body,
     el("p", { text: "Visor geográfico de fondos públicos concursables de Chile para organizaciones comunitarias, ONG, municipios y emprendedores." }),
     el("p", { class: "msg warn", text: api.aviso }),
     el("div", { class: "block" }, el("h3", { text: "Datos" }), el("ul", { class: "req" },
@@ -537,7 +545,7 @@ const TABLAS = {
 };
 const valorCol = (c, x) => c.v ? c.v(x) : x[c.k];
 
-document.querySelectorAll(".table-tabs button").forEach(b => b.addEventListener("click", () => { st.tablaTab = b.dataset.tab; guardarPrefs(); renderTabla(); }));
+document.querySelectorAll(".table-tabs button").forEach(b => b.addEventListener("click", () => { st.tablaTab = b.dataset.tab; if (!st.tablaAbierta) { st.tablaAbierta = true; setTimeout(() => map.invalidateSize(), 0); } guardarPrefs(); renderTabla(); }));
 $(".table-tabs").addEventListener("keydown", e => {
   const bs = [...document.querySelectorAll(".table-tabs button")], i = bs.indexOf(document.activeElement);
   const j = { ArrowRight: 1, ArrowLeft: -1 }[e.key]; if (i < 0 || !j) return;

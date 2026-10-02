@@ -89,7 +89,7 @@ a { color: var(--brand); }
 .panel-head h2 { margin: 0; font-size: 16px; font-weight: 600; overflow: hidden; text-overflow: ellipsis; }
 .panel-body { flex: 1; overflow: auto; padding: 14px 16px 20px; }
 .stage { flex: 1; min-width: 0; display: flex; flex-direction: column; position: relative; }
-#map { flex: 1; min-height: 160px; background: var(--bg); }
+#map { flex: 1; min-height: 160px; background: var(--bg); position: relative; z-index: 0; isolation: isolate; }
 
 /* bloques de panel */
 .block { margin-bottom: 18px; }
@@ -99,7 +99,7 @@ a { color: var(--brand); }
 .field small { color: var(--ink-3); }
 input[type=text], input[type=number], input[type=search]:not(#buscar), select, textarea { width: 100%; min-height: 34px; border: 1px solid var(--line-strong); border-radius: 2px; background: var(--fg); padding: 5px 8px; }
 textarea { min-height: 80px; resize: vertical; }
-.btn { appearance: none; border: 1px solid var(--brand); background: var(--brand); color: var(--brand-ink); padding: 6px 14px; min-height: 34px; border-radius: 2px; cursor: pointer; font-weight: 600; }
+.btn { white-space: nowrap; appearance: none; border: 1px solid var(--brand); background: var(--brand); color: var(--brand-ink); padding: 6px 14px; min-height: 34px; border-radius: 2px; cursor: pointer; font-weight: 600; }
 .btn:hover { background: var(--brand-hover); border-color: var(--brand-hover); }
 .btn.ghost { background: transparent; color: var(--brand); }
 .btn.ghost:hover { background: var(--info-bg); }

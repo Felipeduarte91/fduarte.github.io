@@ -52,8 +52,9 @@ test("regiones como GeoJSON", async () => {
 test("CSV de fondos con BOM y encabezados", async () => {
   const r = await req("/api/fondos.csv");
   assert.match(r.headers.get("content-type"), /text\/csv/);
-  const t = await r.text();
-  assert.ok(t.startsWith("﻿ID,Fondo"));
+  const bytes = new Uint8Array(await r.arrayBuffer());
+  assert.deepEqual([...bytes.slice(0, 3)], [0xef, 0xbb, 0xbf]); // BOM para que Excel lea UTF-8
+  assert.ok(new TextDecoder().decode(bytes).startsWith("ID,Fondo"));
 });
 
 test("ciclo de vida de un proyecto con token", async () => {
@@ -74,7 +75,7 @@ test("ciclo de vida de un proyecto con token", async () => {
   assert.equal(guardado[0].estado, "adjudicado");
 
   assert.equal((await req("/api/proyectos/" + p.id, { method: "DELETE" })).status, 401);
-  assert.equal((await req("/api/proyectos/" + p.id, { method: "DELETE", headers: { Authorization: "Bearer " + TOKEN } })).status, 204);
+  assert.equal((await req("/api/proyectos/" + p.id, { method: "DELETE", headers: { Authorization: "Bearer " + TOKEN } })).status, 200);
   assert.equal((await req("/api/proyectos/" + p.id, { method: "DELETE", headers: { Authorization: "Bearer " + TOKEN } })).status, 404);
 });
 

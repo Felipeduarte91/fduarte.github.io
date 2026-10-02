@@ -28,15 +28,16 @@ export async function conectar() {
     if (h.ok && (h.headers.get("content-type") || "").includes("json")) modo = "api";
   } catch (e) {}
 
-  const [{ regiones }, catalogo] = await Promise.all([
+  const [regionesMeta, catalogo] = await Promise.all([
     fetch("data/regiones.json").then(r => r.json()),
     fetch("data/fondos.json").then(r => r.json())
   ]);
+  const { regiones } = regionesMeta;
   const ctx = { regiones, fondos: catalogo.fondos };
 
-  // Capa opcional de polígonos regionales (GeoJSON con propiedad "codigo"). Ver README.
+  // Capa opcional de polígonos regionales: se declara en regiones.json ("poligonos": "data/regiones.geojson"). Ver README.
   let poligonos = null;
-  try { const r = await fetch("data/regiones.geojson"); if (r.ok) poligonos = await r.json(); } catch (e) {}
+  if (regionesMeta.poligonos) { try { const r = await fetch(regionesMeta.poligonos); if (r.ok) poligonos = await r.json(); } catch (e) {} }
 
   const api = {
     modo, regiones, fondos: catalogo.fondos, aviso: catalogo.aviso, actualizado: catalogo.actualizado, poligonos,

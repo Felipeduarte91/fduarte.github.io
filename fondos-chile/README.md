@@ -64,7 +64,7 @@ Variables de entorno:
 
 ## Límites regionales (opcional)
 
-Sin polígonos, la capa temática usa símbolos proporcionales en cada capital. Para coropletas reales, agregue `public/data/regiones.geojson` (FeatureCollection de polígonos en WGS84) con la propiedad `codigo` igual al código de región (`"01"`… `"16"`). Fuentes posibles: IDE Chile o la Biblioteca del Congreso Nacional (mapas vectoriales). Simplifique la geometría (p. ej. con mapshaper) para que pese poco.
+Sin polígonos, la capa temática usa símbolos proporcionales en cada capital. Para coropletas reales, agregue `public/data/regiones.geojson` (FeatureCollection de polígonos en WGS84) con la propiedad `codigo` igual al código de región (`"01"`… `"16"`) y declárelo en `public/data/regiones.json` con `"poligonos": "data/regiones.geojson"`. Fuentes posibles: IDE Chile o la Biblioteca del Congreso Nacional (mapas vectoriales). Simplifique la geometría (p. ej. con mapshaper) para que pese poco.
 
 ## Ampliar el catálogo
 
