@@ -75,7 +75,7 @@ modo.title = api.modo === "api" ? "Datos y proyectos servidos por el backend." :
 
 /* ---------------- mapa ---------------- */
 const CHILE = L.latLngBounds([-56, -76.5], [-17.4, -66.3]);
-const map = L.map("map", { zoomControl: false, minZoom: 3, maxZoom: 18 }).fitBounds(CHILE);
+const map = L.map("map", { zoomControl: false, minZoom: 3, maxZoom: 18, zoomSnap: 0.25, zoomDelta: 0.5 }).fitBounds(CHILE, { padding: [12, 12] });
 L.control.zoom({ position: "topright", zoomInTitle: "Acercar", zoomOutTitle: "Alejar" }).addTo(map);
 L.control.scale({ position: "bottomright", imperial: false }).addTo(map);
 map.attributionControl.setPrefix('<a href="https://leafletjs.com" target="_blank" rel="noopener">Leaflet</a>');
@@ -86,15 +86,29 @@ const BASEMAPS = {
   imagen: { nombre: "Imágenes", url: "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}", thumb: "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/4/9/4", attr: "Tiles © Esri — Esri, Maxar, Earthstar Geographics, GIS User Community" },
   gris: { nombre: "Gris claro", url: "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png", thumb: "https://a.basemaps.cartocdn.com/light_all/4/4/9.png", attr: "© OpenStreetMap © CARTO", sub: "abcd" },
   oscuro: { nombre: "Gris oscuro", url: "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png", thumb: "https://a.basemaps.cartocdn.com/dark_all/4/4/9.png", attr: "© OpenStreetMap © CARTO", sub: "abcd" },
-  osm: { nombre: "OpenStreetMap", url: "https://tile.openstreetmap.org/{z}/{x}/{y}.png", thumb: "https://tile.openstreetmap.org/4/4/9.png", attr: "© OpenStreetMap" }
+  osm: { nombre: "OpenStreetMap", url: "https://tile.openstreetmap.org/{z}/{x}/{y}.png", thumb: "https://tile.openstreetmap.org/4/4/9.png", attr: "© OpenStreetMap" },
+  ninguno: { nombre: "Sin mapa base", url: null, thumb: null }
 };
+let basemapBloqueado = false;
 if (!BASEMAPS[st.basemap]) st.basemap = "topo";
 let baseLayer = null;
 function ponerBasemap(k) {
   if (baseLayer) map.removeLayer(baseLayer);
+  baseLayer = null;
   const b = BASEMAPS[k];
-  baseLayer = L.tileLayer(b.url, { attribution: b.attr, subdomains: b.sub || "abc", maxZoom: 19 }).addTo(map);
   st.basemap = k; guardarPrefs();
+  if (!b.url) return;
+  baseLayer = L.tileLayer(b.url, { attribution: b.attr, subdomains: b.sub || "abc", maxZoom: 19 }).addTo(map);
+  // Si el sitio no permite cargar mosaicos externos (red o política de seguridad), seguir sin mapa base.
+  let ok = 0, err = 0;
+  baseLayer.on("tileload", () => { ok++; });
+  baseLayer.on("tileerror", () => {
+    if (++err >= 4 && !ok && st.basemap === k) {
+      basemapBloqueado = true; ponerBasemap("ninguno");
+      toast("No se pudo cargar el mapa base en este sitio. Se muestra el mapa sin fondo.", "warn");
+      if (st.panel === "basemap") renderPanel();
+    }
+  });
 }
 ponerBasemap(st.basemap);
 
@@ -104,7 +118,7 @@ const Herramientas = L.Control.extend({
   onAdd() {
     const d = L.DomUtil.create("div", "leaflet-bar");
     d.append(
-      el("button", { type: "button", title: "Vista inicial", "aria-label": "Vista inicial", onclick: () => map.fitBounds(CHILE) },
+      el("button", { type: "button", title: "Vista inicial", "aria-label": "Vista inicial", onclick: () => map.fitBounds(CHILE, { padding: [12, 12] }) },
         svgIcon("M3 11 12 3l9 8M5 9.5V21h5v-6h4v6h5V9.5")),
       el("button", { type: "button", title: "Mi ubicación", "aria-label": "Mi ubicación", onclick: () => map.locate({ setView: true, maxZoom: 11 }) },
         svgIcon("M12 2v4M12 18v4M2 12h4M18 12h4M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8z")));
@@ -181,7 +195,7 @@ function renderRegiones() {
         pane: "regiones",
         attribution: 'Límites: <a href="https://www.geoboundaries.org" target="_blank" rel="noopener">geoBoundaries</a> (BCN, OCHA) CC BY 3.0 IGO',
         filter: f => !!REG[String(f.properties.codigo).padStart(2, "0")],
-        style: f => { const s = estilo(REG[String(f.properties.codigo).padStart(2, "0")]); return { ...s, weight: s.weight === 3 ? 3 : 1 }; },
+        style: f => { const s = estilo(REG[String(f.properties.codigo).padStart(2, "0")]); return s.weight === 3 ? s : { ...s, weight: 1, color: cssVar("--ink-3") }; },
         onEachFeature: (f, ly) => { const r = REG[String(f.properties.codigo).padStart(2, "0")]; ly.bindTooltip(tip(r), { sticky: true }); ly.on("click", () => { if (!st.herramienta) seleccionar("region", r.codigo); }); }
       }).addTo(capaRegiones).eachLayer(ly => { if (st.sel && st.sel.tipo === "region" && String(ly.feature.properties.codigo).padStart(2, "0") === st.sel.id) ly.bringToFront(); });
     } else {
@@ -196,9 +210,9 @@ function renderRegiones() {
     }
   }
   if (st.capas.sedes.visible) api.regiones.forEach(r => {
-    L.marker([r.lat, r.lng], { pane: "sedes", keyboard: false, icon: L.divIcon({ className: "sede-icon", iconSize: [10, 10] }) })
+    L.marker([r.lat, r.lng], { pane: "sedes", keyboard: false, bubblingMouseEvents: true, icon: L.divIcon({ className: "sede-icon", iconSize: [10, 10] }) })
       .bindTooltip(el("div", {}, el("b", { text: "Gobierno Regional" }), r.nombre + " · " + r.capital), { direction: "top", offset: [0, -6] })
-      .on("click", () => seleccionar("region", r.codigo)).addTo(capaSedes);
+      .on("click", () => { if (!st.herramienta) seleccionar("region", r.codigo); }).addTo(capaSedes);
   });
   st.clases = cs;
 }
@@ -279,7 +293,7 @@ function renderDetalle() {
       p.descripcion ? el("p", { style: "white-space:pre-wrap", text: p.descripcion }) : null,
       el("div", { class: "row" },
         el("button", { type: "button", class: "btn small", text: "Editar", onclick: () => editarProyecto(p) }),
-        el("button", { type: "button", class: "btn small danger", text: "Eliminar", onclick: () => eliminarProyecto(p) }),
+        el("button", { type: "button", class: "btn small danger", text: "Eliminar", onclick: e => eliminarProyecto(p, e.currentTarget) }),
         p.fondoId && FON[p.fondoId] ? el("button", { type: "button", class: "btn small ghost", text: "Ver fondo", onclick: () => seleccionar("fondo", p.fondoId) }) : null));
   }
 }
@@ -379,8 +393,13 @@ function editarProyecto(p) {
   body.append(form);
 }
 
-async function eliminarProyecto(p) {
-  if (!confirm("¿Eliminar el proyecto «" + p.nombre + "»? Esta acción no se puede deshacer.")) return;
+async function eliminarProyecto(p, btn) {
+  // Confirmación en dos pasos dentro de la página (algunos visores bloquean confirm()).
+  if (btn && !btn.dataset.confirmar) {
+    btn.dataset.confirmar = "1"; btn.textContent = "Confirmar eliminación";
+    setTimeout(() => { if (btn.isConnected) { delete btn.dataset.confirmar; btn.textContent = "Eliminar"; } }, 4000);
+    return;
+  }
   try {
     await conToken(t => api.eliminarProyecto(p.id, t));
     st.sel = null; await recargarProyectos(); refrescar(); toast("Proyecto eliminado.", "ok");
@@ -464,9 +483,10 @@ function panelLeyenda(body) {
 }
 
 function panelBasemap(body) {
+  if (basemapBloqueado) body.append(el("p", { class: "msg warn", style: "margin-top:0", text: "Este sitio no permite cargar mapas base externos. Las regiones y proyectos se siguen viendo sin fondo." }));
   body.append(el("div", { class: "gallery" }, Object.entries(BASEMAPS).map(([k, b]) =>
     el("button", { type: "button", "aria-pressed": st.basemap === k, onclick: () => { ponerBasemap(k); renderPanel(); } },
-      el("img", { src: b.thumb, alt: "", loading: "lazy" }), el("span", { text: b.nombre })))));
+      b.thumb ? el("img", { src: b.thumb, alt: "", loading: "lazy" }) : el("span", { class: "thumb-vacio", "aria-hidden": "true" }), el("span", { text: b.nombre })))));
 }
 
 function panelProyecto(body) {
@@ -557,9 +577,13 @@ $(".table-tabs").addEventListener("keydown", e => {
 });
 $("#tabla-toggle").addEventListener("click", () => { st.tablaAbierta = !st.tablaAbierta; guardarPrefs(); renderTabla(); setTimeout(() => map.invalidateSize(), 0); });
 $("#filtro-extension").addEventListener("change", e => { st.extension = e.target.checked; renderTabla(); });
+const csvTabla = () => { const T = TABLAS[st.tablaTab]; return aCSV(ordenar(T, T.filas()), T.cols.map(c => ({ titulo: c.t, valor: x => valorCol(c, x) }))); };
+$("#copiar-csv").addEventListener("click", async () => {
+  try { await navigator.clipboard.writeText(csvTabla().replace(/^\ufeff/, "")); toast("Tabla copiada: péguela en una planilla.", "ok"); }
+  catch (e) { toast("Este navegador no permitió copiar. Use Exportar CSV.", "warn"); }
+});
 $("#exportar").addEventListener("click", () => {
-  const T = TABLAS[st.tablaTab];
-  const csv = aCSV(ordenar(T, T.filas()), T.cols.map(c => ({ titulo: c.t, valor: x => valorCol(c, x) })));
+  const csv = csvTabla();
   const a = el("a", { href: URL.createObjectURL(new Blob([csv], { type: "text/csv;charset=utf-8" })), download: st.tablaTab + ".csv" });
   document.body.append(a); a.click(); setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 0);
 });

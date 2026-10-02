@@ -130,6 +130,7 @@ textarea { min-height: 80px; resize: vertical; }
 .gallery button img { display: block; width: 100%; aspect-ratio: 4/3; object-fit: cover; background: var(--fg-2); }
 .gallery button span { display: block; padding: 5px 7px; font-size: 12px; }
 .gallery button[aria-pressed="true"] { border-color: var(--brand); }
+.thumb-vacio { display: block; width: 100%; aspect-ratio: 4/3; background: repeating-linear-gradient(45deg, var(--fg-2) 0 8px, var(--bg) 8px 16px); }
 
 /* leyenda */
 .legend-item { display: flex; align-items: center; gap: 10px; padding: 3px 0; font-size: 13px; font-variant-numeric: tabular-nums; }
@@ -221,6 +222,9 @@ ul.req { margin: 4px 0 12px; padding-left: 18px; }
 }
 @media (max-width: 520px) {
   .brand div { display: none; }
+  .table-tabs { flex: 1; min-width: 0; }
+  .table-tabs button { padding: 0 10px; }
+  #copiar-csv { display: none; }
   .rail button span { display: none; }
   .table { height: 42%; }
 }
