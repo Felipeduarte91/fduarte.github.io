@@ -16,23 +16,35 @@ export const TIPOS_ORG = {
   persona: "Persona natural", empresa: "Empresa"
 };
 
-export const ESTADOS_FONDO = { abierto: "Abierto (estimado)", proximo: "Próximo (estimado)", cerrado: "Cerrado este año (estimado)", sin_fecha: "Sin fecha estimada" };
+export const ESTADOS_FONDO = { abierto: "Abierto", proximo: "Próximo", cerrado: "Cerrado", sin_fecha: "Sin fecha" };
 
 export const ESTADOS_PROYECTO = { idea: "Idea", postulado: "Postulado", adjudicado: "Adjudicado", rechazado: "No adjudicado" };
 
 const MESES = ["enero", "febrero", "marzo", "abril", "mayo", "junio", "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"];
 
-// Estado según la ventana típica de meses (1-12). Es una estimación, no una fecha oficial.
+const fechaLarga = iso => { const [y, m, d] = iso.split("-").map(Number); return d + " de " + MESES[m - 1] + " de " + y; };
+const isoLocal = d => d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
+
+// Estado del fondo. Si hay una convocatoria con fechas publicadas, manda; si ya pasó o no hay,
+// se estima con la ventana típica de meses (1-12), que no es una fecha oficial.
 export function estadoFondo(fondo, hoy = new Date()) {
+  const c = fondo.convocatoria, h = isoLocal(hoy);
+  if (c && c.cierra) {
+    if ((!c.abre || c.abre <= h) && h <= c.cierra) return { estado: "abierto", exacto: true, texto: c.nombre + ": abierta hasta el " + fechaLarga(c.cierra) + "." };
+    if (c.abre && h < c.abre) return { estado: "proximo", exacto: true, texto: c.nombre + ": abre el " + fechaLarga(c.abre) + "." };
+  }
+  const previa = c && c.cierra && h > c.cierra ? c.nombre + " cerró el " + fechaLarga(c.cierra) + ". " : "";
   const v = fondo.ventana;
+  if ((!v || !v.desde || !v.hasta) && previa) return { estado: "cerrado", texto: previa + "Sin fecha estimada para la próxima." };
   if (!v || !v.desde || !v.hasta) return { estado: "sin_fecha", texto: "Sin fecha estimada: revise la institución." };
   const m = hoy.getMonth() + 1;
   const rango = MESES[v.desde - 1] + (v.desde === v.hasta ? "" : "–" + MESES[v.hasta - 1]);
   const dentro = v.desde <= v.hasta ? m >= v.desde && m <= v.hasta : m >= v.desde || m <= v.hasta;
-  if (dentro) return { estado: "abierto", texto: "Suele abrir en " + rango + "." };
+  const est = previa ? "Estimado: la próxima suele abrir en " + rango + "." : "Estimado: suele abrir en " + rango + ".";
+  if (dentro && !previa) return { estado: "abierto", texto: est + " Confirme que la convocatoria esté abierta." };
   const faltan = (v.desde - m + 12) % 12;
-  if (faltan <= 3) return { estado: "proximo", texto: "Suele abrir en " + rango + " (en ~" + faltan + (faltan === 1 ? " mes)." : " meses).") };
-  return { estado: "cerrado", texto: "Suele abrir en " + rango + "." };
+  if (faltan >= 1 && faltan <= 3) return { estado: "proximo", texto: previa + est + " (en ~" + faltan + (faltan === 1 ? " mes)." : " meses).") };
+  return { estado: "cerrado", texto: previa + est };
 }
 
 // Fondos disponibles en una región: los nacionales y la versión regional de los fondos regionales.

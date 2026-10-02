@@ -1,5 +1,5 @@
 {
-  "aviso": "Catálogo referencial. Montos, fechas y requisitos cambian cada año: confírmelos siempre en las bases vigentes de cada institución.",
+  "aviso": "Catálogo referencial, revisado con búsqueda web el 2026-10-02. Montos, fechas y requisitos cambian cada año: confírmelos en las bases vigentes.",
   "actualizado": "2026-10-02",
   "fondos": [
     {
@@ -7,270 +7,550 @@
       "nombre": "FNDR 8% Concursos Comunitarios",
       "institucion": "Gobierno Regional (cada región)",
       "cobertura": "regional",
-      "temas": ["social", "cultura", "deporte", "seguridad", "ambiente", "adultos_mayores", "discapacidad"],
-      "beneficiarios": ["comunitaria", "ong"],
+      "temas": [
+        "social",
+        "cultura",
+        "deporte",
+        "seguridad",
+        "ambiente",
+        "adultos_mayores",
+        "discapacidad"
+      ],
+      "beneficiarios": [
+        "comunitaria",
+        "ong"
+      ],
       "monto_min": null,
       "monto_max": null,
       "ventana": null,
       "url": null,
       "resumen": "Concursos del 8% del Fondo Nacional de Desarrollo Regional para iniciativas de organizaciones sin fines de lucro del territorio.",
       "notas": "Cada GORE define líneas, montos y fechas. Referencia O'Higgins: $6 a $12 millones en Inclusión Social (bases 2025), postulación abril–mayo.",
-      "requisitos": ["Personalidad jurídica vigente (en O'Higgins, 2 años o más)", "Inscripción en el Registro de receptores de fondos públicos (Ley 19.862)", "Máximo un proyecto adjudicado al año (según región)"]
+      "requisitos": [
+        "Personalidad jurídica vigente (en O'Higgins, 2 años o más)",
+        "Inscripción en el Registro de receptores de fondos públicos (Ley 19.862)",
+        "Máximo un proyecto adjudicado al año (según región)"
+      ],
+      "fuentes": [
+        "Instructivo General FNDR 8% Comunitario 2026, GORE O'Higgins"
+      ],
+      "convocatoria": null
     },
     {
       "id": "ficr",
       "nombre": "FIC-R · Fondo de Innovación para la Competitividad Regional",
       "institucion": "Gobierno Regional (cada región)",
       "cobertura": "regional",
-      "temas": ["innovacion", "investigacion"],
-      "beneficiarios": ["universidad"],
+      "temas": [
+        "innovacion",
+        "investigacion"
+      ],
+      "beneficiarios": [
+        "universidad"
+      ],
       "monto_min": null,
       "monto_max": null,
       "ventana": null,
       "url": null,
       "resumen": "Investigación, desarrollo e innovación alineados a la Estrategia Regional de Innovación.",
       "notas": "Postulan instituciones elegibles según la glosa presupuestaria; las organizaciones comunitarias entran como socias.",
-      "requisitos": ["Institución elegible como titular", "Alineación con la Estrategia Regional de Innovación"]
+      "requisitos": [
+        "Institución elegible como titular",
+        "Alineación con la Estrategia Regional de Innovación"
+      ],
+      "convocatoria": null,
+      "fuentes": []
     },
     {
       "id": "ffoip",
       "nombre": "Fondo de Fortalecimiento de Organizaciones de Interés Público (FFOIP)",
       "institucion": "Ministerio Secretaría General de Gobierno",
       "cobertura": "nacional",
-      "temas": ["fortalecimiento", "social"],
-      "beneficiarios": ["comunitaria", "ong"],
+      "temas": [
+        "fortalecimiento",
+        "social"
+      ],
+      "beneficiarios": [
+        "comunitaria",
+        "ong"
+      ],
       "monto_min": null,
-      "monto_max": 4000000,
-      "ventana": {"desde": 3, "hasta": 4},
-      "url": "https://www.msgg.gob.cl",
+      "monto_max": 10000000,
+      "ventana": {
+        "desde": 3,
+        "hasta": 4
+      },
+      "url": "https://fondodefortalecimiento.gob.cl",
       "resumen": "Fortalecimiento de la organización o de la comunidad. Tiene escalas local, regional y nacional.",
-      "notas": "Monto máximo indicado: escala regional (dos o más comunas). En 2026 la convocatoria fue del 2 de marzo al 24 de abril.",
-      "requisitos": ["Inscripción en el Catastro de Organizaciones de Interés Público"]
+      "notas": "Topes 2026: proyecto local $2.500.000 (una comuna), regional $4.000.000 (dos o más comunas de una región) y nacional $10.000.000 (más de una región).",
+      "requisitos": [
+        "Inscripción en el Catastro de Organizaciones de Interés Público"
+      ],
+      "convocatoria": {
+        "nombre": "FFOIP 2026",
+        "abre": "2026-03-02",
+        "cierra": "2026-04-24"
+      },
+      "fuentes": [
+        "https://www.chileatiende.gob.cl/fichas/54963-fondo-de-fortalecimiento-de-organizaciones-de-interes-publico-ffoip",
+        "https://www.diariooficial.interior.gob.cl/publicaciones/2026/04/17/44427/01/2794538.pdf"
+      ]
     },
     {
       "id": "fmcs",
       "nombre": "Fondo de Fomento de Medios de Comunicación Social",
       "institucion": "Ministerio Secretaría General de Gobierno",
       "cobertura": "nacional",
-      "temas": ["comunicaciones"],
-      "beneficiarios": ["medio"],
+      "temas": [
+        "comunicaciones"
+      ],
+      "beneficiarios": [
+        "medio",
+        "persona"
+      ],
       "monto_min": null,
-      "monto_max": null,
-      "ventana": null,
-      "url": "https://www.msgg.gob.cl",
-      "resumen": "Apoyo a medios de comunicación social regionales, provinciales y comunales.",
-      "notas": "Se concursa por región.",
-      "requisitos": ["Ser persona jurídica propietaria o concesionaria de un medio de comunicación"]
+      "monto_max": 5500000,
+      "ventana": {
+        "desde": 3,
+        "hasta": 4
+      },
+      "url": "https://fondodemedios.gob.cl",
+      "resumen": "Apoyo a medios de comunicación social regionales, provinciales y comunales, de personas naturales o jurídicas.",
+      "notas": "Hasta $5.500.000 por proyecto (2026). Postulación en línea del 2 de marzo al 19 de abril; por correo certificado hasta el 10 de abril. Se concursa por región.",
+      "requisitos": [
+        "Ser propietario (persona natural o jurídica) de un medio de comunicación social chileno regional, provincial o comunal"
+      ],
+      "convocatoria": {
+        "nombre": "FFMCS 2026",
+        "abre": "2026-03-02",
+        "cierra": "2026-04-19"
+      },
+      "fuentes": [
+        "https://www.chileatiende.gob.cl/fichas/113803-fondo-de-fomento-de-medios-de-comunicacion-social-ffmcs",
+        "https://fondodemedios.gob.cl/wp-content/uploads/2026/03/Manual-postulacion-en-linea.pdf"
+      ]
     },
     {
       "id": "cultura",
       "nombre": "Fondos de Cultura (Fondart, Libro, Música, Audiovisual)",
       "institucion": "Ministerio de las Culturas, las Artes y el Patrimonio",
       "cobertura": "nacional",
-      "temas": ["cultura", "patrimonio"],
-      "beneficiarios": ["persona", "comunitaria", "ong", "empresa"],
+      "temas": [
+        "cultura",
+        "patrimonio"
+      ],
+      "beneficiarios": [
+        "persona",
+        "comunitaria",
+        "ong",
+        "empresa"
+      ],
       "monto_min": null,
       "monto_max": null,
-      "ventana": null,
+      "ventana": {
+        "desde": 7,
+        "hasta": 9
+      },
       "url": "https://www.fondosdecultura.cl",
       "resumen": "Concursos para creación, producción, difusión y formación en artes, libro, música y audiovisual. Fondart tiene modalidad nacional y regional.",
-      "notas": "Cada fondo y línea tiene sus propios montos y fechas.",
-      "requisitos": ["Registro en Perfil Cultura"]
+      "notas": "Convocatoria 2027 (rediseñada): cada fondo abrió entre el 27 de julio y el 4 de agosto de 2026 y cerró entre el 31 de agosto y el 8 de septiembre. Montos según fondo y línea.",
+      "requisitos": [
+        "Registro en Perfil Cultura"
+      ],
+      "convocatoria": {
+        "nombre": "Fondos Cultura 2027",
+        "abre": "2026-07-27",
+        "cierra": "2026-09-08"
+      },
+      "fuentes": [
+        "https://www.cultura.gob.cl/convocatorias/ministerio-de-las-culturas-lanza-fondos-cultura-2027-con-rediseno-y-enfoque-ciudadano/",
+        "https://www.cultura.gob.cl/convocatorias/seremi-de-las-culturas-invita-a-postular-a-los-fondos-cultura-2027-y-publica-calendario-de-capacitaciones/"
+      ]
     },
     {
       "id": "patrimonio",
       "nombre": "Fondo del Patrimonio Cultural",
       "institucion": "Servicio Nacional del Patrimonio Cultural",
       "cobertura": "nacional",
-      "temas": ["patrimonio", "cultura"],
-      "beneficiarios": ["comunitaria", "ong", "municipio", "persona"],
+      "temas": [
+        "patrimonio",
+        "cultura"
+      ],
+      "beneficiarios": [
+        "comunitaria",
+        "ong",
+        "municipio",
+        "persona"
+      ],
       "monto_min": null,
       "monto_max": null,
-      "ventana": null,
+      "ventana": {
+        "desde": 8,
+        "hasta": 10
+      },
       "url": "https://www.patrimoniocultural.gob.cl",
       "resumen": "Conservación, puesta en valor y gestión del patrimonio cultural material e inmaterial.",
-      "notas": "",
-      "requisitos": []
+      "notas": "Convocatoria 2026 con $5.500 millones en total (concurso nacional y regional). Nueva submodalidad para patrimonio mueble y línea propia para monumentos públicos. Postulación en fondos.gob.cl.",
+      "requisitos": [],
+      "convocatoria": {
+        "nombre": "Fondo del Patrimonio Cultural 2026",
+        "abre": "2026-08-05",
+        "cierra": "2026-10-08"
+      },
+      "fuentes": [
+        "https://www.cultura.gob.cl/convocatorias/fondo-del-patrimonio-cultural-2026-abre-sus-postulaciones-con-record-de-financiamiento-de-5-500-millones/"
+      ]
     },
     {
       "id": "fondo-social",
       "nombre": "Fondo Social Presidente de la República",
       "institucion": "Ministerio del Interior",
       "cobertura": "nacional",
-      "temas": ["social", "equipamiento"],
-      "beneficiarios": ["comunitaria", "ong"],
-      "monto_min": null,
-      "monto_max": null,
-      "ventana": null,
-      "url": "https://www.interior.gob.cl",
+      "temas": [
+        "social",
+        "equipamiento"
+      ],
+      "beneficiarios": [
+        "comunitaria",
+        "ong"
+      ],
+      "monto_min": 300000,
+      "monto_max": 15000000,
+      "ventana": {
+        "desde": 5,
+        "hasta": 6
+      },
+      "url": "https://fspr.interior.gob.cl",
       "resumen": "Proyectos sociales y de equipamiento comunitario para organizaciones sin fines de lucro.",
-      "notas": "",
-      "requisitos": ["Personalidad jurídica vigente", "Inscripción en el Registro de receptores de fondos públicos (Ley 19.862)"]
+      "notas": "Montos 2026: equipamiento comunitario $300.000–$1.500.000; implementación comunitaria $300.000–$700.000; infraestructura social y comunitaria $2.000.000–$15.000.000.",
+      "requisitos": [
+        "Personalidad jurídica vigente",
+        "Inscripción en el Registro de receptores de fondos públicos (Ley 19.862)"
+      ],
+      "convocatoria": {
+        "nombre": "Fondo Social 2026",
+        "abre": "2026-05-18",
+        "cierra": "2026-06-01"
+      },
+      "fuentes": [
+        "https://www.chileatiende.gob.cl/fichas/3754-fondo-social-presidente-de-la-republica"
+      ]
     },
     {
       "id": "fnsp",
       "nombre": "Fondo Nacional de Seguridad Pública (FNSP)",
       "institucion": "Subsecretaría de Prevención del Delito",
       "cobertura": "nacional",
-      "temas": ["seguridad"],
-      "beneficiarios": ["municipio", "ong", "comunitaria"],
+      "temas": [
+        "seguridad"
+      ],
+      "beneficiarios": [
+        "municipio",
+        "ong",
+        "comunitaria"
+      ],
       "monto_min": null,
       "monto_max": null,
       "ventana": null,
       "url": "https://www.spd.gob.cl",
       "resumen": "Proyectos de prevención del delito y seguridad comunitaria.",
       "notas": "",
-      "requisitos": []
+      "requisitos": [],
+      "convocatoria": null,
+      "fuentes": []
     },
     {
       "id": "fpa",
       "nombre": "Fondo de Protección Ambiental (FPA)",
       "institucion": "Ministerio del Medio Ambiente",
       "cobertura": "nacional",
-      "temas": ["ambiente"],
-      "beneficiarios": ["comunitaria", "ong", "indigena"],
+      "temas": [
+        "ambiente"
+      ],
+      "beneficiarios": [
+        "comunitaria",
+        "ong",
+        "indigena"
+      ],
       "monto_min": null,
-      "monto_max": null,
-      "ventana": null,
-      "url": "https://mma.gob.cl",
-      "resumen": "Iniciativas ciudadanas de protección o reparación del medio ambiente y educación ambiental.",
-      "notas": "Tiene concursos específicos (por ejemplo, para comunidades indígenas).",
-      "requisitos": []
+      "monto_max": 6000000,
+      "ventana": {
+        "desde": 8,
+        "hasta": 10
+      },
+      "url": "https://fondos.mma.gob.cl",
+      "resumen": "Proyectos ambientales ciudadanos: biodiversidad, eficiencia energética e hídrica, gestión de residuos, puntos verdes y contaminación.",
+      "notas": "FPA 2027: $6.000.000 por proyecto, cualquiera sea la línea. Cierre: 14 de octubre de 2026 a las 14:00. Hay un concurso aparte para establecimientos educacionales.",
+      "requisitos": [
+        "Persona jurídica privada sin fines de lucro (juntas de vecinos, centros culturales, clubes, comunidades agrícolas, etc.)"
+      ],
+      "convocatoria": {
+        "nombre": "FPA 2027 · Proyectos Sustentables Ciudadanos",
+        "abre": null,
+        "cierra": "2026-10-14"
+      },
+      "fuentes": [
+        "https://mma.gob.cl/fpa-2027-abre-postulaciones-con-financiamiento-de-6-millones-para-proyectos-ambientales/",
+        "https://www.nubleactual.cl/region-de-nuble/hasta-el-14-de-octubre-organizaciones-de-nuble-pueden-postular-a-6-millones-para-proyectos-ambientales/"
+      ]
     },
     {
       "id": "fnam",
       "nombre": "Fondo Nacional del Adulto Mayor",
       "institucion": "Servicio Nacional del Adulto Mayor (SENAMA)",
       "cobertura": "nacional",
-      "temas": ["adultos_mayores"],
-      "beneficiarios": ["comunitaria", "ong"],
+      "temas": [
+        "adultos_mayores"
+      ],
+      "beneficiarios": [
+        "comunitaria",
+        "ong"
+      ],
       "monto_min": null,
       "monto_max": null,
-      "ventana": null,
+      "ventana": {
+        "desde": 3,
+        "hasta": 5
+      },
       "url": "https://www.senama.gob.cl",
       "resumen": "Proyectos autogestionados por clubes y organizaciones de personas mayores, y proyectos de instituciones que trabajan con ellas.",
-      "notas": "",
-      "requisitos": []
+      "notas": "Concurso 2026: 11.164 proyectos postulados y 4.725 financiados, con más de $4.729 millones en total.",
+      "requisitos": [
+        "Organización con RUT y personalidad jurídica vigente",
+        "Todos sus integrantes de 60 años o más (proyectos autogestionados)"
+      ],
+      "convocatoria": {
+        "nombre": "FNAM autogestionados 2026",
+        "abre": "2026-03-30",
+        "cierra": "2026-05-08"
+      },
+      "fuentes": [
+        "https://www.chileatiende.gob.cl/fichas/9548-fondo-nacional-del-adulto-mayor-para-organizaciones-de-personas-mayores-proyectos-autogestionados",
+        "https://g5noticias.cl/2026/09/08/mas-de-4-700-millones-financiaran-proyectos-creados-por-organizaciones-de-personas-mayores-en-todo-chile/"
+      ]
     },
     {
       "id": "fonapi",
       "nombre": "Fondo Nacional de Proyectos Inclusivos (FONAPI)",
       "institucion": "Servicio Nacional de la Discapacidad (SENADIS)",
       "cobertura": "nacional",
-      "temas": ["discapacidad"],
-      "beneficiarios": ["comunitaria", "ong", "municipio"],
+      "temas": [
+        "discapacidad"
+      ],
+      "beneficiarios": [
+        "comunitaria",
+        "ong",
+        "municipio"
+      ],
       "monto_min": null,
-      "monto_max": null,
+      "monto_max": 30000000,
       "ventana": null,
       "url": "https://www.senadis.gob.cl",
-      "resumen": "Proyectos que promueven la inclusión social de personas con discapacidad.",
-      "notas": "",
-      "requisitos": []
+      "resumen": "Proyectos que promueven la inclusión de personas con discapacidad, personas autistas y personas cuidadoras.",
+      "notas": "Entre $10 y $30 millones según el tipo de organización; FONAPI 1 hasta $10.000.000, con al menos 8 personas beneficiarias directas. La convocatoria 2026 cerró el 23 de marzo.",
+      "requisitos": [
+        "Organización pública o institución privada sin fines de lucro vigente"
+      ],
+      "convocatoria": {
+        "nombre": "FONAPI 2026",
+        "abre": null,
+        "cierra": "2026-03-23"
+      },
+      "fuentes": [
+        "https://www.chileatiende.gob.cl/fichas/35408"
+      ]
     },
     {
       "id": "fondeporte",
       "nombre": "Fondo Nacional para el Fomento del Deporte (Fondeporte)",
       "institucion": "Instituto Nacional de Deportes (IND)",
       "cobertura": "nacional",
-      "temas": ["deporte"],
-      "beneficiarios": ["comunitaria", "ong", "municipio"],
+      "temas": [
+        "deporte"
+      ],
+      "beneficiarios": [
+        "comunitaria",
+        "ong",
+        "municipio"
+      ],
       "monto_min": null,
       "monto_max": null,
-      "ventana": null,
+      "ventana": {
+        "desde": 3,
+        "hasta": 12
+      },
       "url": "https://www.ind.cl",
       "resumen": "Actividad física, deporte formativo, recreativo y competitivo.",
-      "notas": "",
-      "requisitos": ["Inscripción en el Registro Nacional de Organizaciones Deportivas, cuando corresponda"]
+      "notas": "En 2026 se postula por ventanas mensuales del 1 al 10 de cada mes, de abril a diciembre (marzo: 13 al 22). Categorías: formación, deporte recreativo, competición y ciencias del deporte.",
+      "requisitos": [
+        "Inscripción en el Registro Nacional de Organizaciones Deportivas, cuando corresponda"
+      ],
+      "convocatoria": {
+        "nombre": "Fondeporte 2026 · ventana de octubre",
+        "abre": "2026-10-01",
+        "cierra": "2026-10-10"
+      },
+      "fuentes": [
+        "https://www.chileatiende.gob.cl/fichas/1639-fondo-nacional-para-el-fomento-del-deporte"
+      ]
     },
     {
       "id": "injuv",
-      "nombre": "Fondos concursables INJUV",
+      "nombre": "Fondo Concursable Compromiso Joven",
       "institucion": "Instituto Nacional de la Juventud (INJUV)",
       "cobertura": "nacional",
-      "temas": ["juventud", "social"],
-      "beneficiarios": ["comunitaria", "ong"],
+      "temas": [
+        "juventud",
+        "social"
+      ],
+      "beneficiarios": [
+        "comunitaria",
+        "ong",
+        "indigena"
+      ],
       "monto_min": null,
-      "monto_max": null,
+      "monto_max": 5000000,
       "ventana": null,
       "url": "https://www.injuv.gob.cl",
-      "resumen": "Iniciativas de y para jóvenes.",
-      "notas": "",
-      "requisitos": []
+      "resumen": "Proyectos que promueven la participación de jóvenes de 15 a 29 años en el desarrollo comunitario.",
+      "notas": "2026: $5.000.000 por proyecto, a ejecutar en una de las 60 comunas del programa Compromiso Joven. Resultados el 15 de octubre de 2026.",
+      "requisitos": [
+        "Personalidad jurídica vigente, con 2 años o más de existencia",
+        "Inscripción en el Registro de receptores de fondos públicos (Ley 19.862)"
+      ],
+      "convocatoria": {
+        "nombre": "Compromiso Joven 2026",
+        "abre": null,
+        "cierra": "2026-09-15"
+      },
+      "fuentes": [
+        "https://www.chileatiende.gob.cl/fichas/146301-fondo-concursable-compromiso-joven-2026"
+      ]
     },
     {
       "id": "chile-compromiso",
       "nombre": "Fondo Chile Compromiso de Todos",
       "institucion": "Ministerio de Desarrollo Social y Familia",
       "cobertura": "nacional",
-      "temas": ["social"],
-      "beneficiarios": ["ong"],
+      "temas": [
+        "social"
+      ],
+      "beneficiarios": [
+        "ong"
+      ],
       "monto_min": null,
       "monto_max": null,
       "ventana": null,
       "url": "https://www.desarrollosocialyfamilia.gob.cl",
       "resumen": "Proyectos de la sociedad civil para la superación de la pobreza y la vulnerabilidad.",
-      "notas": "",
-      "requisitos": []
+      "notas": "No se encontró una convocatoria 2026 en fuentes públicas: verifique si sigue vigente.",
+      "requisitos": [],
+      "convocatoria": null,
+      "fuentes": []
     },
     {
       "id": "conadi",
       "nombre": "Fondo de Desarrollo Indígena",
       "institucion": "Corporación Nacional de Desarrollo Indígena (CONADI)",
       "cobertura": "nacional",
-      "temas": ["indigena", "emprendimiento"],
-      "beneficiarios": ["indigena"],
+      "temas": [
+        "indigena",
+        "emprendimiento"
+      ],
+      "beneficiarios": [
+        "indigena"
+      ],
       "monto_min": null,
       "monto_max": null,
       "ventana": null,
       "url": "https://www.conadi.gob.cl",
       "resumen": "Desarrollo económico y social de personas, comunidades y asociaciones indígenas.",
-      "notas": "",
-      "requisitos": ["Calidad indígena acreditada o comunidad/asociación inscrita en CONADI"]
+      "notas": "Agrupa varios concursos (por ejemplo, gestión social, habitabilidad, predios adquiridos). El subsidio de gestión y protección del patrimonio cultural indígena llega hasta $3 millones.",
+      "requisitos": [
+        "Calidad indígena acreditada o comunidad/asociación inscrita en CONADI"
+      ],
+      "fuentes": [
+        "https://www.chileatiende.gob.cl/fichas/116019/1/pdf"
+      ],
+      "convocatoria": null
     },
     {
       "id": "sercotec",
       "nombre": "Capital Semilla Emprende",
       "institucion": "Servicio de Cooperación Técnica (Sercotec)",
       "cobertura": "nacional",
-      "temas": ["emprendimiento"],
-      "beneficiarios": ["persona"],
+      "temas": [
+        "emprendimiento"
+      ],
+      "beneficiarios": [
+        "persona"
+      ],
       "monto_min": null,
-      "monto_max": null,
+      "monto_max": 3500000,
       "ventana": null,
       "url": "https://www.sercotec.cl",
       "resumen": "Subsidio para poner en marcha un nuevo negocio.",
-      "notas": "Se concursa por región, con focos regionales.",
-      "requisitos": []
+      "notas": "Subsidio de $3.500.000 netos: $200.000–$500.000 para gestión empresarial y $3.000.000–$3.300.000 para inversiones. Convocatorias por región.",
+      "requisitos": [],
+      "fuentes": [
+        "https://www.sercotec.cl/wp-content/uploads/2026/04/Capital-Semilla-Recomendaciones-para-la-postulacion-2026.pdf"
+      ],
+      "convocatoria": null
     },
     {
       "id": "corfo-semilla",
       "nombre": "Semilla Inicia",
       "institucion": "CORFO",
       "cobertura": "nacional",
-      "temas": ["emprendimiento", "innovacion"],
-      "beneficiarios": ["persona", "empresa"],
+      "temas": [
+        "emprendimiento",
+        "innovacion"
+      ],
+      "beneficiarios": [
+        "persona",
+        "empresa"
+      ],
       "monto_min": null,
-      "monto_max": null,
+      "monto_max": 17000000,
       "ventana": null,
       "url": "https://www.corfo.cl",
       "resumen": "Apoyo a emprendimientos innovadores en etapa temprana.",
-      "notas": "",
-      "requisitos": []
+      "notas": "Hasta 75 % del proyecto con tope de $15.000.000; emprendimientos liderados por mujeres: hasta 85 % y $17.000.000. Convocatorias regionales con fechas propias (en 2026, varias cerraron en marzo y junio).",
+      "requisitos": [],
+      "fuentes": [
+        "https://www.diariooficial.interior.gob.cl/publicaciones/2026/03/14/44400/01/2780043.pdf"
+      ],
+      "convocatoria": null
     },
     {
       "id": "fondecyt",
       "nombre": "Fondecyt Regular",
       "institucion": "Agencia Nacional de Investigación y Desarrollo (ANID)",
       "cobertura": "nacional",
-      "temas": ["investigacion"],
-      "beneficiarios": ["universidad"],
+      "temas": [
+        "investigacion"
+      ],
+      "beneficiarios": [
+        "universidad"
+      ],
       "monto_min": null,
       "monto_max": null,
-      "ventana": null,
-      "url": "https://anid.cl",
+      "ventana": {
+        "desde": 4,
+        "hasta": 6
+      },
+      "url": "https://anid.cl/concursos/concurso-de-proyectos-fondecyt-regular-2027/",
       "resumen": "Proyectos de investigación científica y tecnológica.",
       "notas": "Postulan investigadores patrocinados por una institución.",
-      "requisitos": []
+      "requisitos": [],
+      "convocatoria": {
+        "nombre": "Fondecyt Regular 2027",
+        "abre": "2026-04-24",
+        "cierra": "2026-06-10"
+      },
+      "fuentes": [
+        "https://uchile.cl/convocatorias/239425/apertura-del-concurso-fondecyt-regular-2027"
+      ]
     }
   ]
 }

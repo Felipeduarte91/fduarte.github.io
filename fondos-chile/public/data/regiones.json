@@ -1,6 +1,7 @@
 {
   "fuente": "Población: Censo 2017 (INE). Coordenadas: capital regional, aproximadas.",
-  "poligonos": null,
+  "poligonos": "data/regiones.geojson",
+  "poligonos_fuente": "Límites: geoBoundaries CHL ADM1 (fuente BCN y OCHA ROLAC), licencia CC BY 3.0 IGO. Simplificados con mapshaper.",
   "regiones": [
     {"codigo": "15", "nombre": "Arica y Parinacota", "capital": "Arica", "lat": -18.4783, "lng": -70.3126, "poblacion": 226068},
     {"codigo": "01", "nombre": "Tarapacá", "capital": "Iquique", "lat": -20.2133, "lng": -70.1503, "poblacion": 330558},

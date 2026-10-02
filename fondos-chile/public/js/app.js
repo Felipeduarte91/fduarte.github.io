@@ -24,8 +24,8 @@ const cssVar = v => getComputedStyle(document.documentElement).getPropertyValue(
 const opciones = (obj, vacio, sel) => [el("option", { value: "", text: vacio }), ...Object.entries(obj).map(([k, t]) => el("option", { value: k, selected: sel === k, text: t }))];
 
 const PREFS = "fondos-chile-ui-v1";
-const DEF = { filtros: { q: "", tema: "", tipo: "", estado: "", cobertura: "" }, indicador: "fondos", basemap: "topo",
-  capas: { regiones: { visible: true, opacidad: 0.8 }, sedes: { visible: true }, proyectos: { visible: true, opacidad: 1 } },
+const DEF = { filtros: { q: "", tema: "", tipo: "", estado: "", cobertura: "" }, indicador: "poblacion", basemap: "topo",
+  capas: { regiones: { visible: true, opacidad: 0.7 }, sedes: { visible: true }, proyectos: { visible: true, opacidad: 1 } },
   tablaTab: "fondos", tablaAbierta: true, tema: "" };
 const st = (() => {
   let p = {};
@@ -137,7 +137,7 @@ const INDICADORES = {
   poblacion: { nombre: "Población (Censo 2017)", fmt: num },
   hab_por_proyecto: { nombre: "Habitantes por proyecto registrado", fmt: num }
 };
-if (!INDICADORES[st.indicador]) st.indicador = "fondos";
+if (!INDICADORES[st.indicador]) st.indicador = "poblacion";
 let indic = [];
 
 // Cortes de intervalo igual en 5 clases; si todos los valores son iguales, una sola clase.
@@ -179,10 +179,11 @@ function renderRegiones() {
     if (api.poligonos) {
       L.geoJSON(api.poligonos, {
         pane: "regiones",
+        attribution: 'Límites: <a href="https://www.geoboundaries.org" target="_blank" rel="noopener">geoBoundaries</a> (BCN, OCHA) CC BY 3.0 IGO',
         filter: f => !!REG[String(f.properties.codigo).padStart(2, "0")],
-        style: f => ({ ...estilo(REG[String(f.properties.codigo).padStart(2, "0")]), weight: 1 }),
+        style: f => { const s = estilo(REG[String(f.properties.codigo).padStart(2, "0")]); return { ...s, weight: s.weight === 3 ? 3 : 1 }; },
         onEachFeature: (f, ly) => { const r = REG[String(f.properties.codigo).padStart(2, "0")]; ly.bindTooltip(tip(r), { sticky: true }); ly.on("click", () => { if (!st.herramienta) seleccionar("region", r.codigo); }); }
-      }).addTo(capaRegiones);
+      }).addTo(capaRegiones).eachLayer(ly => { if (st.sel && st.sel.tipo === "region" && String(ly.feature.properties.codigo).padStart(2, "0") === st.sel.id) ly.bringToFront(); });
     } else {
       // Sin polígonos: símbolos proporcionales en la capital (área ∝ valor).
       [...api.regiones].sort((a, b) => (porCod[b.codigo][st.indicador] || 0) - (porCod[a.codigo][st.indicador] || 0)).forEach(r => {
@@ -259,12 +260,14 @@ function renderDetalle() {
       el("p", { class: "muted", style: "margin-top:0", text: f.institucion }),
       el("div", { class: "row", style: "margin-bottom:10px" }, tagCob(f), tagEstado(f)),
       el("p", { text: f.resumen }),
-      kv([["Monto máximo", clp(f.monto_max)], ["Cobertura", f.cobertura === "regional" ? "Cada región (16 GORE)" : "Todo el país"], ["Calendario", e.texto]]),
+      kv([[f.monto_min ? "Monto" : "Monto máximo", f.monto_min ? clp(f.monto_min) + " a " + clp(f.monto_max) : clp(f.monto_max)], ["Cobertura", f.cobertura === "regional" ? "Cada región (16 GORE)" : "Todo el país"]]),
+      el("p", { class: "msg " + (e.estado === "abierto" ? "ok" : "info") }, el("b", { text: "Calendario: " }), e.texto),
       el("div", { class: "block" }, el("h3", { text: "Quiénes postulan" }), el("div", { class: "pills" }, f.beneficiarios.map(b => el("span", { class: "pill", text: TIPOS_ORG[b] || b })))),
       el("div", { class: "block" }, el("h3", { text: "Temas" }), el("div", { class: "pills" }, f.temas.map(t => el("span", { class: "pill", text: TEMAS[t] || t })))),
       f.requisitos.length ? el("div", { class: "block" }, el("h3", { text: "Requisitos frecuentes" }), el("ul", { class: "req" }, f.requisitos.map(r => el("li", { text: r })))) : null,
       f.notas ? el("p", { class: "msg warn", text: f.notas }) : null,
-      f.url ? el("p", {}, el("a", { href: f.url, target: "_blank", rel: "noopener noreferrer", text: "Sitio de la institución ↗" })) : null,
+      f.url ? el("p", {}, el("a", { href: f.url, target: "_blank", rel: "noopener noreferrer", text: "Sitio del fondo o institución ↗" })) : null,
+      f.fuentes && f.fuentes.length ? el("div", { class: "block" }, el("h3", { text: "Fuentes" }), el("ul", { class: "req" }, f.fuentes.map(s => el("li", {}, /^https?:\/\//.test(s) ? el("a", { href: s, target: "_blank", rel: "noopener noreferrer", text: new URL(s).hostname.replace(/^www\./, "") }) : s)))) : null,
       ps.length ? el("div", { class: "block" }, el("h3", { text: "Proyectos registrados con este fondo" }), listaProyectos(ps)) : null);
   } else if (tipo === "proyecto") {
     const p = st.proyectos.find(x => x.id === id);
@@ -497,7 +500,7 @@ function panelAcerca(body) {
       el("li", { text: "Catálogo de fondos: actualizado al " + api.actualizado + "." }),
       el("li", { text: "Población: Censo 2017 (INE)." }),
       el("li", { text: "Mapas base: Esri, CARTO y OpenStreetMap." }),
-      el("li", { text: api.poligonos ? "Límites regionales: archivo data/regiones.geojson." : "Sin límites regionales cargados: se usan símbolos en las capitales." }))),
+      el("li", { text: api.poligonos ? "Límites regionales: geoBoundaries CHL ADM1, a partir de BCN y OCHA ROLAC (CC BY 3.0 IGO), simplificados." : "Sin límites regionales cargados: se usan símbolos en las capitales." }))),
     el("div", { class: "block" }, el("h3", { text: "Conexión" }), el("p", { class: "muted", text: api.modo === "api" ? "Conectado a la API (Node + Express)." : "Modo estático: sin servidor, los proyectos quedan en este navegador. Para compartirlos, ejecute el backend (ver README)." })));
 }
 
@@ -515,8 +518,9 @@ const TABLAS = {
     cols: [
       { k: "nombre", t: "Fondo" }, { k: "institucion", t: "Institución" },
       { k: "cobertura", t: "Cobertura", r: tagCob },
-      { k: "estado", t: "Estado estimado", v: f => ESTADOS_FONDO[estadoFondo(f).estado], r: tagEstado },
+      { k: "estado", t: "Estado", v: f => ESTADOS_FONDO[estadoFondo(f).estado], r: tagEstado },
       { k: "monto_max", t: "Monto máx.", num: true, f: clp },
+      { k: "cierre", t: "Cierre", v: f => f.convocatoria && f.convocatoria.cierra || null, f: () => "", r: f => el("span", { style: "white-space:nowrap", text: f.convocatoria && f.convocatoria.cierra ? f.convocatoria.cierra.split("-").reverse().join("-") : "–" }) },
       { k: "temas", t: "Temas", v: f => f.temas.map(t => TEMAS[t] || t).join(", ") }
     ]
   },

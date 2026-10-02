@@ -45,6 +45,22 @@ Variables de entorno:
 | `ALLOW_ORIGIN` | Origen permitido para CORS (p. ej. `https://usuario.github.io`). |
 | `STORE_FILE` | Ruta del archivo de proyectos. |
 
+## Despliegue
+
+**Frontend en GitHub Pages (modo estático).** Con Pages activado en la rama `main` del repositorio, la app queda en
+`https://felipeduarte91.github.io/fduarte.github.io/fondos-chile/public/`. Sin backend, los proyectos se guardan en cada navegador.
+
+**Backend en Render (Docker).** `render.yaml` es un Blueprint: en Render elija *New → Blueprint* y este repositorio. Crea el servicio con `rootDir: fondos-chile`, genera `ADMIN_TOKEN` (cópielo desde el panel de Render), permite CORS desde `https://felipeduarte91.github.io` y monta un disco en `/data` para los proyectos. El disco requiere plan pago; en el plan gratuito los proyectos se pierden en cada reinicio.
+
+Para conectar la versión de Pages a ese backend: `…/fondos-chile/public/?api=https://brujula-fondos-chile.onrender.com`.
+
+**Docker en cualquier servidor:**
+
+```bash
+docker build -t brujula-fondos fondos-chile
+docker run -p 3000:3000 -v fondos-datos:/data -e ADMIN_TOKEN=cambie-esto brujula-fondos
+```
+
 ## API
 
 | Método | Ruta | Descripción |
@@ -62,10 +78,12 @@ Variables de entorno:
 | PUT | `/api/proyectos/:id` | Actualiza (token si `ADMIN_TOKEN`). |
 | DELETE | `/api/proyectos/:id` | Elimina (token si `ADMIN_TOKEN`). |
 
-## Límites regionales (opcional)
+## Límites regionales
+
+Incluidos en `public/data/regiones.geojson`: geoBoundaries CHL ADM1 (fuente BCN y OCHA ROLAC, licencia CC BY 3.0 IGO), simplificados con mapshaper (~3 % de los vértices, ~115 KB). Para quitarlos, ponga `"poligonos": null` en `regiones.json`.
 
 Sin polígonos, la capa temática usa símbolos proporcionales en cada capital. Para coropletas reales, agregue `public/data/regiones.geojson` (FeatureCollection de polígonos en WGS84) con la propiedad `codigo` igual al código de región (`"01"`… `"16"`) y declárelo en `public/data/regiones.json` con `"poligonos": "data/regiones.geojson"`. Fuentes posibles: IDE Chile o la Biblioteca del Congreso Nacional (mapas vectoriales). Simplifique la geometría (p. ej. con mapshaper) para que pese poco.
 
 ## Ampliar el catálogo
 
-Agregue entradas a `public/data/fondos.json`. Campos: `id`, `nombre`, `institucion`, `cobertura` (`nacional` | `regional`), `temas`, `beneficiarios` (claves de `core.js`), `monto_max` (CLP o `null`), `ventana` (`{"desde": mes, "hasta": mes}` o `null`), `url`, `resumen`, `notas`, `requisitos`. Para limitar un fondo regional a ciertas regiones, agregue `"regiones": ["06", "07"]`.
+Agregue entradas a `public/data/fondos.json`. Campos: `id`, `nombre`, `institucion`, `cobertura` (`nacional` | `regional`), `temas`, `beneficiarios` (claves de `core.js`), `monto_min` y `monto_max` (CLP o `null`), `convocatoria` (`{"nombre", "abre": "AAAA-MM-DD" | null, "cierra": "AAAA-MM-DD"}` o `null`: fechas publicadas, mandan sobre la estimación), `ventana` (`{"desde": mes, "hasta": mes}` o `null`: calendario típico para estimar la próxima), `url`, `resumen`, `notas`, `requisitos`, `fuentes` (URLs). Para limitar un fondo regional a ciertas regiones, agregue `"regiones": ["06", "07"]`.

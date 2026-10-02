@@ -100,6 +100,14 @@ test("core: estado estimado según la ventana de meses", () => {
   assert.equal(estadoFondo(f, new Date(2026, 9, 2)).estado, "cerrado");
   assert.equal(estadoFondo({ ventana: { desde: 11, hasta: 1 } }, new Date(2027, 0, 5)).estado, "abierto");
   assert.equal(estadoFondo({ ventana: null }).estado, "sin_fecha");
+  // convocatoria con fechas exactas
+  const g = { convocatoria: { nombre: "X", abre: "2026-08-01", cierra: "2026-10-14" }, ventana: { desde: 8, hasta: 10 } };
+  assert.equal(estadoFondo(g, new Date(2026, 9, 14)).estado, "abierto");
+  assert.ok(estadoFondo(g, new Date(2026, 9, 14)).exacto);
+  assert.equal(estadoFondo(g, new Date(2026, 6, 20)).estado, "proximo");
+  const t = estadoFondo(g, new Date(2026, 9, 15));
+  assert.equal(t.estado, "cerrado"); assert.match(t.texto, /cerró el 14 de octubre de 2026/);
+  assert.equal(estadoFondo({ convocatoria: { nombre: "Y", abre: null, cierra: "2026-03-23" }, ventana: null }, new Date(2026, 9, 2)).estado, "cerrado");
 });
 
 test("core: CSV neutraliza fórmulas", () => {
