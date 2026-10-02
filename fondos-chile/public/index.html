@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Brújula de Fondos Chile</title>
+<meta name="description" content="Visor geográfico de fondos públicos concursables de Chile por región.">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="">
+<link rel="stylesheet" href="css/app.css">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin="" defer></script>
+<script type="module" src="js/app.js"></script>
+</head>
+<body>
+<a class="skip" href="#map">Ir al mapa</a>
+
+<header class="appbar">
+  <div class="brand">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="2"/><path d="M15.5 8.5 13 13l-4.5 2.5L11 11z" fill="currentColor"/></svg>
+    <div><b>Brújula de Fondos Chile</b><span>Fondos públicos concursables por región</span></div>
+  </div>
+  <div class="search" role="search">
+    <label for="buscar" class="sr">Buscar región o fondo</label>
+    <input id="buscar" type="search" placeholder="Buscar región o fondo" autocomplete="off" role="combobox" aria-expanded="false" aria-controls="buscar-lista" aria-autocomplete="list">
+    <ul id="buscar-lista" role="listbox" hidden></ul>
+  </div>
+  <div class="appbar-end">
+    <span class="chip" id="modo" title="Origen de los datos">Conectando…</span>
+    <button type="button" class="icon-btn" id="btn-tema" aria-label="Cambiar tema claro/oscuro" title="Tema claro/oscuro">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a9 9 0 1 0 9 9 7 7 0 0 1-9-9z" fill="currentColor"/></svg>
+    </button>
+  </div>
+</header>
+
+<div class="shell">
+  <nav class="rail" aria-label="Herramientas">
+    <button type="button" data-panel="capas" aria-pressed="false" title="Capas"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 3 9 5-9 5-9-5zm-9 9 9 5 9-5M3 16l9 5 9-5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg><span>Capas</span></button>
+    <button type="button" data-panel="filtros" aria-pressed="false" title="Filtros"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 5h18l-7 8v6l-4 2v-8z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg><span>Filtros</span></button>
+    <button type="button" data-panel="leyenda" aria-pressed="false" title="Leyenda"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6h12M9 12h12M9 18h12" stroke="currentColor" stroke-width="1.8"/><circle cx="4.5" cy="6" r="1.8" fill="currentColor"/><circle cx="4.5" cy="12" r="1.8" fill="currentColor"/><circle cx="4.5" cy="18" r="1.8" fill="currentColor"/></svg><span>Leyenda</span></button>
+    <button type="button" data-panel="basemap" aria-pressed="false" title="Mapa base"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="8" height="8" rx="1" fill="none" stroke="currentColor" stroke-width="1.8"/><rect x="13" y="3" width="8" height="8" rx="1" fill="none" stroke="currentColor" stroke-width="1.8"/><rect x="3" y="13" width="8" height="8" rx="1" fill="none" stroke="currentColor" stroke-width="1.8"/><rect x="13" y="13" width="8" height="8" rx="1" fill="currentColor"/></svg><span>Mapa base</span></button>
+    <button type="button" data-panel="proyecto" aria-pressed="false" title="Agregar proyecto"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 22s7-6.2 7-12a7 7 0 0 0-14 0c0 5.8 7 12 7 12z" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M12 7v6M9 10h6" stroke="currentColor" stroke-width="1.8"/></svg><span>Agregar</span></button>
+    <button type="button" data-panel="acerca" aria-pressed="false" title="Acerca de"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M12 11v6M12 7.5v.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><span>Acerca</span></button>
+  </nav>
+
+  <aside class="panel" id="panel" hidden aria-labelledby="panel-titulo">
+    <div class="panel-head"><h2 id="panel-titulo"></h2><button type="button" class="icon-btn" id="panel-cerrar" aria-label="Cerrar panel">✕</button></div>
+    <div class="panel-body" id="panel-body"></div>
+  </aside>
+
+  <div class="stage">
+    <div id="map" role="application" aria-label="Mapa de Chile con fondos públicos por región" tabindex="0"></div>
+    <div class="tool-hint" id="tool-hint" hidden></div>
+
+    <section class="table" id="tabla" aria-label="Tabla de atributos">
+      <div class="table-head">
+        <div role="tablist" aria-label="Tablas" class="table-tabs">
+          <button type="button" role="tab" data-tab="fondos" id="tt-fondos" aria-controls="tabla-body">Fondos <span class="n" id="n-fondos"></span></button>
+          <button type="button" role="tab" data-tab="regiones" id="tt-regiones" aria-controls="tabla-body">Regiones <span class="n" id="n-regiones"></span></button>
+          <button type="button" role="tab" data-tab="proyectos" id="tt-proyectos" aria-controls="tabla-body">Proyectos <span class="n" id="n-proyectos"></span></button>
+        </div>
+        <div class="table-actions">
+          <label class="toggle" title="Mostrar solo lo visible en el mapa"><input type="checkbox" id="filtro-extension"> Extensión del mapa</label>
+          <button type="button" class="btn small ghost" id="exportar">Exportar CSV</button>
+          <button type="button" class="icon-btn" id="tabla-toggle" aria-expanded="true" aria-controls="tabla-body" title="Mostrar u ocultar tabla">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6" fill="none" stroke="currentColor" stroke-width="2"/></svg>
+          </button>
+        </div>
+      </div>
+      <div class="table-body" id="tabla-body" role="tabpanel"></div>
+    </section>
+  </div>
+
+  <aside class="detail" id="detail" hidden aria-labelledby="detail-titulo">
+    <div class="panel-head"><h2 id="detail-titulo"></h2><button type="button" class="icon-btn" id="detail-cerrar" aria-label="Cerrar detalle">✕</button></div>
+    <div class="panel-body" id="detail-body"></div>
+  </aside>
+</div>
+
+<footer class="statusbar">
+  <span id="coords">Lat –, Lng –</span>
+  <span id="estado-filtros"></span>
+  <span class="aviso">Datos referenciales: confirme montos y fechas en las bases vigentes.</span>
+</footer>
+</body>
+</html>

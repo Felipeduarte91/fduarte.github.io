@@ -1,0 +1,16 @@
+{
+  "name": "brujula-fondos-chile",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Visor geográfico de fondos públicos de Chile, estilo SIG (Leaflet + Express).",
+  "type": "module",
+  "engines": { "node": ">=20" },
+  "scripts": {
+    "start": "node server/index.js",
+    "dev": "node --watch server/index.js",
+    "test": "node --test test/"
+  },
+  "dependencies": {
+    "express": "^4.21.2"
+  }
+}
